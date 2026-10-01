@@ -1,10 +1,13 @@
 {
-  "name": "liminal",
+  "name": "cardright",
   "version": "0.1.0",
-  "description": "A banking app that reshapes itself around what you came to do. Working prototype with an inspectable engine.",
+  "description": "CardRight tells you which card to use for every purchase by counting what cards cost you, not just what they pay you.",
   "type": "module",
   "main": "src/index.js",
-  "scripts": { "test": "node --test tests/*.test.js", "eval": "node scripts/eval.js" },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "eval": "node scripts/eval.js"
+  },
   "author": "Murtuza",
   "license": "MIT"
 }

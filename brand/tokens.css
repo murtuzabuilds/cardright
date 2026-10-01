@@ -1,8 +1,10 @@
-/* Liminal design tokens. A threshold at dusk: dark room, lavender doorway, warm light on the floor. */
+/* CardRight design tokens. Forest for trust, cream for calm, gold for the money you keep, clay for money you lose. */
 :root{
-  --dusk:#0D0C12; --dusk2:#14121B; --dusk3:#1B1824; --dusk4:#24202F; --line:#2D2839; --line2:#3A344A;
-  --ink:#F1EEF6; --ink2:#BDB6CC; --ink3:#8A829C; --ink4:#625B73;
-  --lav:#B9A6FF; --lav2:#D6CBFF; --lavdim:#6E5FB8; --peach:#FFC9A8; --peach2:#FFB088; --mint:#6CE3C9; --rose:#FF7A8A;
-  --paper:#F6F3EE; --paper2:#EDE8E0; --paper3:#E2DBCF; --pink:#1A1722; --pink2:#4A4458; --pink3:#7B748A;
-  --display:"Fraunces",Georgia,serif; --ui:"Manrope",ui-sans-serif,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --forest:#123A2C; --forest2:#1A4A39; --forest3:#1F5A44; --forest4:#2E6E55; --pine:#0C2A20;
+  --cream:#F3EEE2; --cream2:#EAE3D3; --cream3:#DED5C1; --card:#FFFDF8; --line:#E2DAC8; --line2:#CFC5AE;
+  --t1:#10261E; --t2:#43544C; --t3:#7A877F; --t4:#A6AFA9;
+  --gold:#E8B04B; --gold2:#C98F22; --gold3:#8A5E0D; --clay:#C8553D; --clay2:#A83E29; --sage:#8DB8A2; --sky:#5B8DB8;
+  --display:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
+  --ui:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }

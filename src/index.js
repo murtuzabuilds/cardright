@@ -1,17 +1,19 @@
-export { PEOPLE, BANK, when } from './data.js';
-export { COMPONENTS, STATIC_HOME, STATIC_PATHS } from './components.js';
-export { understand, INTENTS } from './understand.js';
-export { ground, signals, duplicates, unusual, categoryTotals, money } from './ground.js';
-export { compose, home } from './compose.js';
-export * as prefs from './prefs.js';
-export { evaluate, NOW } from './measure.js';
-import { understand } from './understand.js';
-import { ground } from './ground.js';
-import { compose } from './compose.js';
-import { NOW } from './measure.js';
+export { CARDS, CATEGORY } from './cards.js';
+export { MERCHANTS, classify } from './merchants.js';
+export { PEOPLE, NOW, yearOfSpending } from './people.js';
+export { evaluate, rank, apply, explain, walletState, money, ASSUME, qKey } from './optimize.js';
+export { replay } from './replay.js';
+export { plan, payoff } from './plan.js';
+export { readTerms } from './terms.js';
+export { evalTerms, evalMerchants, TERMS_HELD_OUT, MERCHANT_HELD_OUT } from './evals.js';
+import { PEOPLE, NOW } from './people.js';
+import { MERCHANTS, classify } from './merchants.js';
+import { walletState, rank, explain } from './optimize.js';
 
-// One request in, one screen out.
-export function run(text, person, opts = {}) {
-  const u = understand(text, person, opts.prefs), ev = ground(u, person, opts.now ?? NOW);
-  return { understanding: u, evidence: ev, plan: compose(u, ev, { person, prefs: opts.prefs }) };
+// One purchase in, one recommendation out, with the reasoning.
+export function recommend(personId, { merchant, amount, foreign = false, business = false, cat }) {
+  const P = PEOPLE[personId], c = cat ? { cat, confidence: 1, source: 'chosen' } : classify(merchant);
+  const t = { ts: NOW, merchant, amount, cat: c.cat, foreign: foreign || !!MERCHANTS[merchant]?.foreign, business };
+  const r = rank(t, P, walletState(P));
+  return { purchase: t, category: c, ...r, sentence: explain(r, t) };
 }

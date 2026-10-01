@@ -1,99 +1,90 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { run, understand, duplicates, unusual, home, evaluate, PEOPLE, prefs, NOW, COMPONENTS } from '../src/index.js';
+import { recommend, replay, plan, payoff, readTerms, classify, evalTerms, evalMerchants, CARDS, PEOPLE, walletState, evaluate, NOW } from '../src/index.js';
 
-test('finds the double hotel charge', () => {
-  const d = duplicates(PEOPLE.maya.txns);
-  assert.equal(d.length, 1);
-  assert.equal(d[0].merchant, 'Hotel Miradouro');
-  assert.equal(d[0].minutesApart, 2);
+test('interest beats rewards: never send new spending to a card you carry a balance on', () => {
+  for (const m of ['Hilltop Grocers', 'Shopline', 'Pacific Fuel', 'Bulkhaus Club']) {
+    const r = recommend('jordan', { merchant: m, amount: 120 });
+    assert.notEqual(r.best.cardId, 'ridgeline-rotate', m);
+  }
+  const ridge = recommend('jordan', { merchant: 'Shopline', amount: 100 }).options.find(o => o.cardId === 'ridgeline-rotate');
+  assert.ok(ridge.net < 0, 'a 5% card at 26.2% APR should lose money');
 });
 
-test('flags 3am charges at a new store', () => {
-  const u = unusual(PEOPLE.ruth.txns);
-  assert.deepEqual(u.map(x => x.txn), ['r4', 'r5']);
+test('the carried balance costs Jordan more than his rewards earn', () => {
+  const r = replay('jordan');
+  assert.ok(r.actual < 0);
+  assert.ok(r.buckets.interest > r.buckets.card);
 });
 
-test('a dispute screen is built around the evidence', () => {
-  const { plan, evidence } = run('I think the hotel in Lisbon charged me twice', 'maya');
-  assert.equal(plan.intent, 'dispute');
-  assert.equal(evidence.target, 't5');
-  assert.ok(plan.blocks.some(b => b.id === 'duplicatePair'));
-  assert.ok(plan.evidence[0].text.includes('Hotel Miradouro'));
+test('caps are respected', () => {
+  const P = PEOPLE.theo, st = walletState(P), t = { ts: NOW, merchant: 'Greenleaf Market', amount: 500, cat: 'groceries' };
+  st['halden-gas-grocery'].caps['2026'] = 5800;
+  const e = evaluate('halden-gas-grocery', st['halden-gas-grocery'], t, {});
+  assert.equal(e.rewards.toFixed(2), (200 * 0.03 + 300 * 0.01).toFixed(2));
 });
 
-test('anchors never move', () => {
-  for (const [p, t] of [['maya', 'send Jonas $40'], ['ruth', 'my card was stolen'], ['theo', 'asdf qwerty']]) {
-    const b = run(t, p).plan.blocks;
-    assert.equal(b[0].id, 'balance');
-    assert.equal(b.at(-1).id, 'fullApp');
+test('rotating categories only pay when activated', () => {
+  const r = recommend('maya', { merchant: 'Shopline', amount: 100 });
+  const ridge = r.options.find(o => o.cardId === 'ridgeline-rotate');
+  assert.ok(ridge.tips.some(t => t.k === 'activate'));
+});
+
+test('foreign fees and no-FX cards', () => {
+  const r = recommend('maya', { merchant: 'Casa do Fado', amount: 100 });
+  assert.ok(r.options.find(o => o.cardId === 'halden-everyday').parts.some(p => p.k === 'fx'));
+  assert.ok(!r.options.find(o => o.cardId === 'northwind-table').parts.some(p => p.k === 'fx'));
+});
+
+test('HSA wins medical, and is refused elsewhere', () => {
+  assert.equal(recommend('theo', { merchant: 'Osei Family Dental', amount: 300 }).best.cardId, 'lakeside-hsa');
+  assert.ok(recommend('theo', { merchant: 'Noodle Lab', amount: 30 }).ineligible.some(x => x.cardId === 'lakeside-hsa'));
+});
+
+test('business card only for business, and tax payments count the processor fee', () => {
+  assert.ok(recommend('theo', { merchant: 'Noodle Lab', amount: 30 }).ineligible.some(x => x.cardId === 'kiln-business'));
+  const tax = recommend('theo', { merchant: 'Treasury tax payment', amount: 3000 });
+  const oneP = tax.options.find(o => o.cardId === 'halden-gas-grocery');
+  assert.ok(oneP.net < 0, 'a 1% card loses money on a 1.85% processing fee');
+});
+
+test('every recommendation adds up', () => {
+  const r = recommend('maya', { merchant: 'Voltix Electronics', amount: 1299 });
+  for (const o of r.options) assert.equal(o.net.toFixed(2), o.parts.reduce((a, p) => a + p.v, 0).toFixed(2));
+});
+
+test('replay buckets add up to what was left on the table', () => {
+  for (const p of ['maya', 'jordan', 'theo']) {
+    const r = replay(p), sum = Object.values(r.buckets).reduce((a, b) => a + b, 0);
+    assert.ok(Math.abs(sum - r.left) < 0.05, p);
+    assert.equal(JSON.stringify(replay(p).buckets), JSON.stringify(r.buckets), 'deterministic');
   }
 });
 
-test('anything that moves money or locks a card waits for a yes', () => {
-  for (const [p, t] of [['maya', 'send Jonas $40'], ['theo', 'raise my limit to 12000'], ['ruth', 'please lock my card'], ['theo', 'pay the studio rent']]) {
-    const { plan } = run(t, p);
-    const risky = plan.blocks.filter(b => b.risk === 'high');
-    assert.ok(risky.length > 0, t);
-    assert.ok(risky.every(b => b.needsConfirm), t);
-    assert.ok(plan.blocks.some(b => b.id === 'confirmStep'), t);
-  }
+test('payoff math and the balance transfer suggestion', () => {
+  const a = payoff(3400, 0.262, 450), b = payoff(3400, 0.249, 450, { introApr: 0, introMonths: 18, fee: 0.03 });
+  assert.ok(a.interest > 300 && b.interest === 0 && b.fee === 102);
+  assert.ok(plan('jordan').actions.some(x => x.k === 'transfer'));
 });
 
-test('no actions on a guess', () => {
-  const { plan } = run('why is my balance lower than last week', 'ruth');
-  assert.ok(plan.lowConfidence);
-  assert.ok(plan.blocks.some(b => b.id === 'clarify'));
-  assert.ok(plan.blocks.every(b => b.risk === 'low'));
+test('the plan can say no to new cards', () => {
+  for (const p of ['jordan', 'theo']) assert.ok(plan(p).tidy.some(a => a.k === 'nextcard'));
 });
 
-test('urgent requests surface a person', () => {
-  const { plan } = run('someone used my card at 3 in the morning', 'ruth');
-  assert.ok(plan.blocks.some(b => b.id === 'talkToPerson'));
-  assert.ok(plan.blocks.some(b => b.id === 'freezeCard'));
+test('reads fine print into rules', () => {
+  const r = readTerms(CARDS['ridgeline-rotate'].terms);
+  assert.equal(r.earn[0].rate, 5); assert.equal(r.earn[0].cap.amount, 1500); assert.ok(r.earn[0].activation);
+  assert.deepEqual(r.earn[0].rotatingNow, ['online', 'wholesale']);
+  assert.equal(readTerms(CARDS['northwind-table'].terms).fee, 250);
 });
 
-test('plain mode rewrites titles and keeps text large for Ruth', () => {
-  const { plan } = run('please lock my card', 'ruth');
-  assert.equal(plan.textScale, 1.25);
-  assert.ok(plan.blocks.some(b => b.title === 'Lock your card'));
+test('classifier says when it is unsure', () => {
+  assert.equal(classify('Golden Wok').confidence < 0.7, true);
+  assert.equal(classify('Pacific Fuel').cat, 'gas');
 });
 
-test('pins stay, hides are honoured, anchors cannot be hidden', () => {
-  let p = prefs.fresh();
-  p = prefs.pin(p, 'goalProgress');
-  p = prefs.hide(p, 'payeePicker');
-  p = prefs.hide(p, 'balance');
-  const { plan } = run('send Jonas $40', 'maya', { prefs: p });
-  assert.ok(plan.blocks.some(b => b.id === 'goalProgress' && b.pinned));
-  assert.ok(!plan.blocks.some(b => b.id === 'payeePicker'));
-  assert.equal(plan.blocks[0].id, 'balance');
-});
-
-test('a correction is remembered for the same words', () => {
-  const before = understand('my wallet is gone', 'maya');
-  assert.notEqual(before.intent, 'lost');
-  const p = prefs.correct(prefs.fresh(), 'my wallet is gone', 'lost');
-  assert.equal(understand('My wallet is gone!', 'maya', p).intent, 'lost');
-});
-
-test('every hidden block says why', () => {
-  const { plan } = run('what is this foreign transaction fee', 'maya');
-  assert.ok(plan.hidden.length > 0);
-  assert.ok(plan.hidden.every(h => h.reason && COMPONENTS[h.id]));
-});
-
-test('home screen leads with what is worth knowing', () => {
-  const h = home('maya', NOW);
-  assert.ok(h.signals.some(s => s.kind === 'duplicate'));
-  assert.ok(h.signals.some(s => s.kind === 'bill'));
-});
-
-test('evaluation: tuned set, held-out set, and safety invariants', () => {
-  const a = evaluate(), b = evaluate('held-out');
-  assert.equal(a.n, 30); assert.equal(b.n, 15);
-  assert.ok(a.safe && a.anchored && b.safe && b.anchored);
-  assert.ok(a.liminalSteps < a.staticSteps);
-  // most held-out misses should be caught as "not sure" rather than shown confidently
-  assert.ok(b.caughtMisses > b.confidentMisses);
+test('evaluation: held-out misses are mostly caught, never silent for merchants', () => {
+  const t = evalTerms('held'), m = evalMerchants('held');
+  assert.ok(t.caught >= t.silent);
+  assert.equal(m.silent, 0);
 });

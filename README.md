@@ -1,75 +1,87 @@
-<p align="center"><img src="brand/liminal-mark.svg" width="120" alt="Liminal logo, a lit doorway"></p>
+<p align="center"><img src="brand/cardright-logo.svg" width="360" alt="CardRight logo: a card whose stripe becomes a check mark"></p>
 
-<h1 align="center">Liminal</h1>
-<p align="center">A bank app that meets you at the door.</p>
-<p align="center"><a href="https://murtuzabuilds.github.io/liminal/"><b>Live demo</b></a> · <a href="https://murtuzabuilds.github.io/liminal/case-study.html"><b>Case study</b></a></p>
+<p align="center"><b>The card that pays you most is not always the one that leaves you the most.</b></p>
+<p align="center"><a href="https://murtuzabuilds.github.io/cardright/"><b>Live app</b></a> · <a href="https://murtuzabuilds.github.io/cardright/case-study.html"><b>Case study</b></a></p>
 
-![Liminal turning "the hotel charged me twice" into a prefilled dispute](docs/dispute.webp)
+![CardRight recommending a card at checkout](docs/pay.webp)
 
-Liminal is a concept product I designed and built. It reshapes a banking app around what each person came to do, shows why every piece is on the screen, and never moves money without a yes.
+CardRight is a concept product I designed and built. It tells you which card to use for every purchase by counting what your cards cost you, not just what they pay you. It replays your last year of spending, shows where money leaked, and ranks the moves worth making.
 
 ## Why I built it
 
-Banking apps are organised like the bank: Accounts, Cards, Pay, Insights. People don't open the app thinking in tabs. They open it because something happened. The hotel charged them twice. They can't find their card. There's a fee they don't understand.
+People carry several cards, each with its own bonus categories, caps, activations, fees and protections, so most of us pick a favorite and use it for everything. Apps like CardPointers, MaxRewards and Kudos help by telling you which card earns the most points at a store.
 
-Each of those moments is a hunt through menus. In the conventional app modelled here, disputing a charge takes 9 taps across five screens. Liminal does it in 3, starting from one sentence.
+That's the right question for some people and the wrong one for anyone who carries a balance. A 5% card at 26% APR loses money on every purchase. Rewards-first math misses that, along with foreign fees, tax effects and the protections a card adds.
 
-Reshaping an interface is the easy part. Doing it in a bank, where a moving layout loses people and a wrong action loses money, is the real product problem. So most of the work here went into the rules that make it safe to trust.
+## The idea
 
-## Five rules it never breaks
+Every way to pay is scored on one number:
 
-1. **The model shapes the layout. Only you take the action.** Anything that moves money, locks a card or changes a limit is a prepared form, then a confirm step, then a 10 second undo.
-2. **Anchors never move.** Balance is always first and "Show the full app" is always last.
-3. **Every block says why it is there, and every hidden one says why not.** The reasoning panel is the trust layer, not a debug view.
-4. **Unsure means it asks.** Low confidence produces a short "did you mean" with every action removed.
-5. **It learns only from what you tell it.** Pins, hides and corrections. Nothing from hesitation or gaze.
+> **Money kept** = rewards + statement credits + card offers + protections + sign-up bonus progress + tax saved, **minus** interest, foreign fees and processing fees
 
-## What's in the demo
+Every term is shown, and estimates are labelled as estimates.
+
+## What makes it different
+
+1. **Net value, not points.** If you carry a balance, it steers new spending away from that card.
+2. **The whole wallet, across the month.** It tracks caps, quarterly activations, sign-up deadlines and how much of each card's limit you're using.
+3. **Tax-aware.** It covers HSA cards for medical costs, business cards for work spending, and the processing fee on paying taxes by card.
+4. **No paid placement.** The "next card" check runs on your real spending and often says no.
+5. **No card numbers.** It only needs to know which cards you hold.
+
+## What's in the app
 
 | | |
 |---|---|
-| **Opening screen**: before anyone types, it surfaces what's true in the account | **Ruth**: large text, plain words, lock first, a person one tap away |
-| ![](docs/home.webp) | ![](docs/ruth.webp) |
-| **Not sure**: it asks instead of guessing, and remembers the answer | **Confirm**: a clear summary, a yes, and an undo |
-| ![](docs/clarify.webp) | ![](docs/confirm.webp) |
-| **Three people**: ask all three the same thing | **Today's app**: the control, with the tap path spelled out |
-| ![](docs/compare-lock.webp) | ![](docs/static.webp) |
+| **Pay**: which card to tap, with the full breakdown and the notification you'd see at checkout | **Replay**: your last year rerun, with losses split by cause |
+| ![](docs/pay-jordan.webp) | ![](docs/replay.webp) |
+| **Plan**: moves ranked by dollars, each with its math | **Wallet**: caps, bonus progress, balances. Flip "I carry a balance" and everything updates |
+| ![](docs/plan-maya.webp) | ![](docs/wallet.webp) |
+| **Tax-aware**: the HSA beats every rewards card for a dentist bill | **Fine print**: watch the AI turn card terms into rules |
+| ![](docs/pay-theo.webp) | ![](docs/terms.webp) |
 
 ## Results
 
-Two sets of requests: one I tuned the rules on, and a held-out set written after the rules were frozen. Run `npm run eval` to reproduce.
+One year of synthetic spending for three made-up people. Run `npm run eval` to reproduce.
 
-| | Tuned (30) | Held-out (15) |
-|---|---|---|
-| Understood correctly | 100% | 47% |
-| Steps to finish, static app | 6.1 | 6.2 |
-| Steps to finish, Liminal | 2.4 | 2.7 |
-| Misses that asked first | 0 | 6 |
-| Misses shown with confidence | 0 | 2 |
-| Actions that waited for a yes | all | all |
+| Person | Spent | Actually kept | Could keep | Left on the table | Biggest cause |
+|---|---|---|---|---|---|
+| Maya, pays in full, travels | $20,374 | $915 | $1,109 | $194 | Wrong card for the purchase |
+| Jordan, carries a balance | $11,536 | **-$554** | $249 | **$803** | Interest on new spending |
+| Theo, freelancer with an HSA | $35,814 | $536 | $1,022 | $487 | Tax not saved |
 
-The held-out accuracy is low, and I left it that way: hand-written rules overfit. That is why understanding is a swappable slot. What the product owns is behaviour when understanding fails, and there 6 of 8 misses turned into a question, and the other 2 still couldn't move money without a yes.
+The two AI-shaped steps, tested on examples they were never tuned on:
+
+| Step | Tuned set | Held-out set | Held-out misses flagged | Misses not flagged |
+|---|---|---|---|---|
+| Fine print reader (fields) | 100% | 88% | 3 | 1 |
+| Merchant categories | 100% | 56% | 8 | 0 |
+
+The merchant step is weak on unfamiliar names. But every miss came back marked "not sure", so the app asks instead of guessing.
 
 ## The code
 
-Plain JavaScript, no dependencies. The engine lives in `src/` and is tested.
+Plain JavaScript, no dependencies, all in `src/` and tested.
 
 | File | What it does |
 |---|---|
-| `data.js` | Aurel, a fictional bank, and three made-up customers |
-| `components.js` | The kit of about twenty blocks, each with a risk level, plus the static app baseline |
-| `understand.js` | Intent, confidence and details from a sentence. A rule-based stand-in for a model, same output shape |
-| `ground.js` | Finds evidence in the account: double charges, 3am purchases at new stores, bills due, balances |
-| `compose.js` | Builds the screen: blocks with reasons, hidden blocks with reasons, anchors, confirm steps |
-| `prefs.js` | Pins, hides and corrections |
-| `evals.js`, `measure.js` | The two request sets and the comparison with the static app |
+| `cards.js` | Twelve fictional cards with realistic structures, and the bank-transfer option |
+| `people.js` | Three wallets and a deterministic year of spending for each |
+| `merchants.js` | Known merchants and their category quirks, plus a classifier that reports confidence |
+| `optimize.js` | The net value engine: one purchase in, every way to pay scored with each term shown |
+| `replay.js` | Reruns a year three ways (actual, smart, best) to split losses by cause |
+| `plan.js` | Ranked moves: routing, interest, balance transfer, activations, HSA, fee checks, next card |
+| `terms.js` | Reads card fine print into rules and flags what it can't read |
+| `evals.js` | Tuned and held-out sets for the two AI steps |
 
 ```bash
-npm test       # 13 tests
-npm run eval   # the results table
-npx serve .    # open the demo
+npm test       # 14 tests
+npm run eval   # the results tables
+npx serve .    # open the app
 ```
 
-All people, merchants, charges and balances are synthetic.
+In this prototype the fine-print reader and the merchant classifier are transparent rule-based stand-ins, so everything runs offline. In a real product a language model would fill the same output shapes, a person would approve each card's rules, and the decision would stay with the fixed, tested math.
+
+All cards, issuers, people and transactions are fictional. Not financial advice.
 
 Designed and built by Murtuza. MIT licence.
