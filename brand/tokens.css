@@ -1,0 +1,8 @@
+/* Liminal design tokens. A threshold at dusk: dark room, lavender doorway, warm light on the floor. */
+:root{
+  --dusk:#0D0C12; --dusk2:#14121B; --dusk3:#1B1824; --dusk4:#24202F; --line:#2D2839; --line2:#3A344A;
+  --ink:#F1EEF6; --ink2:#BDB6CC; --ink3:#8A829C; --ink4:#625B73;
+  --lav:#B9A6FF; --lav2:#D6CBFF; --lavdim:#6E5FB8; --peach:#FFC9A8; --peach2:#FFB088; --mint:#6CE3C9; --rose:#FF7A8A;
+  --paper:#F6F3EE; --paper2:#EDE8E0; --paper3:#E2DBCF; --pink:#1A1722; --pink2:#4A4458; --pink3:#7B748A;
+  --display:"Fraunces",Georgia,serif; --ui:"Manrope",ui-sans-serif,system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}

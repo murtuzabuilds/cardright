@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0D0C12">
+<title>Liminal case study</title>
+<meta name="description" content="Case study: Liminal, a banking app that reshapes itself around what each person came to do, explains every choice, and never moves money without a yes. By Murtuza.">
+<link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand/tokens.css">
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--dusk);color:var(--ink);font:17px/1.7 var(--ui);-webkit-font-smoothing:antialiased}
+a{color:var(--lav2)}::selection{background:var(--lav);color:var(--dusk)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+nav.top{position:fixed;inset:0 0 auto;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 32px;background:linear-gradient(180deg,rgba(13,12,18,.92),rgba(13,12,18,0))}
+nav.top img{width:32px;height:32px;border-radius:8px}nav.top b{font:400 20px var(--display)}
+nav.top .sp{flex:1}nav.top a{font:12px var(--mono);letter-spacing:.06em;color:var(--ink2);text-decoration:none}
+nav.top a.cta{color:var(--dusk);background:var(--lav);padding:8px 14px;border-radius:999px;font-weight:500}
+.hero{position:relative;min-height:96vh;display:grid;place-items:center;overflow:hidden;padding:120px 0 80px}
+#door{position:absolute;inset:0;width:100%;height:100%}
+.hero .copy{position:relative;text-align:center;max-width:900px;padding:0 24px}
+.eyebrow{font:12px var(--mono);letter-spacing:.2em;color:var(--ink3);text-transform:uppercase}
+.hero h1{font:300 clamp(44px,7vw,96px)/1 var(--display);margin:.3em 0 .25em;letter-spacing:-.03em}
+.hero h1 em{font-style:italic;color:var(--peach)}
+.hero p{font-size:clamp(17px,1.8vw,21px);color:var(--ink2);max-width:680px;margin:0 auto 28px}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;gap:8px;padding:13px 20px;border-radius:999px;text-decoration:none;font-size:15px;font-weight:600;border:1px solid var(--line2);color:var(--ink)}
+.btn.primary{background:var(--lav);color:var(--dusk);border:0;box-shadow:0 14px 50px -14px rgba(185,166,255,.7)}
+.meta{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:40px;font-size:13px;color:var(--ink3)}
+.meta b{display:block;font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:2px;font-weight:400}
+section{padding:110px 0;position:relative}
+.label{font:12px var(--mono);letter-spacing:.18em;color:var(--lav);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.label::before{content:"";width:28px;height:1px;background:var(--lav)}
+h2{font:300 clamp(32px,4.4vw,58px)/1.08 var(--display);margin:0 0 24px;letter-spacing:-.02em;max-width:920px}
+h2 em{font-style:italic;color:var(--peach)}
+h3{font-size:19px;font-weight:700;margin:0 0 6px}
+p.big{font-size:20px;color:var(--ink2);max-width:780px}
+.muted{color:var(--ink3)}
+.cols{display:grid;gap:16px}.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}
+.card{border:1px solid var(--line);border-radius:20px;padding:24px;background:linear-gradient(180deg,var(--dusk3),var(--dusk2))}
+.card p{margin:0;color:var(--ink2);font-size:15.5px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 8px}.tabs span{font:13px var(--mono);padding:8px 12px;border-radius:10px;border:1px dashed var(--line2);color:var(--ink3)}
+.moments{display:flex;flex-wrap:wrap;gap:8px}.moments span{padding:9px 14px;border-radius:999px;background:rgba(255,201,168,.10);border:1px solid rgba(255,201,168,.25);color:var(--peach);font-size:14.5px}
+.rule{display:grid;grid-template-columns:56px 1fr;gap:16px;padding:24px 0;border-top:1px solid var(--line)}
+.rule .n{font:12px var(--mono);color:var(--lav);padding-top:8px}
+.rule h3{font:400 27px/1.2 var(--display);margin:0 0 6px}.rule p{margin:0;color:var(--ink2);max-width:760px}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:30px}
+.flow div{border:1px solid var(--line);border-radius:16px;padding:18px;background:var(--dusk2);position:relative}
+.flow div:not(:last-child):after{content:"";position:absolute;right:-9px;top:50%;width:8px;height:1px;background:var(--line2)}
+.flow b{font:12px var(--mono);letter-spacing:.1em;color:var(--lav);text-transform:uppercase;display:block;margin-bottom:6px}
+.flow p{margin:0;font-size:14px;color:var(--ink2);line-height:1.55}
+.flow code{font:12px var(--mono);color:var(--ink3)}
+.shot{border-radius:18px;border:1px solid var(--line2);overflow:hidden;box-shadow:0 40px 120px -40px rgba(185,166,255,.4);background:var(--dusk2)}
+.shot img{display:block;width:100%}
+.feature{display:grid;grid-template-columns:.85fr 1.3fr;gap:44px;align-items:center;padding:52px 0;border-top:1px solid var(--line)}
+.feature:nth-child(even){grid-template-columns:1.3fr .85fr}.feature:nth-child(even) .txt{order:2}
+.feature .tag{font:11px var(--mono);letter-spacing:.16em;color:var(--peach);text-transform:uppercase}
+.feature h3{font:400 34px/1.12 var(--display);margin:10px 0 12px}
+.feature p{color:var(--ink2);margin:0 0 10px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:20px}
+th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line)}
+th{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:400}
+td b{font:500 15px var(--mono);color:var(--ink)}td.hi b{color:var(--lav)}td.warm b{color:var(--peach)}
+.callout{border-left:2px solid var(--peach);padding:6px 0 6px 20px;margin:28px 0;font:300 24px/1.45 var(--display);color:var(--ink);max-width:820px}
+.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:20px}
+.sw{border-radius:16px;height:110px;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;font:12px var(--mono);border:1px solid var(--line)}
+.sw small{opacity:.7}
+.brandrow{display:grid;grid-template-columns:220px 1fr;gap:40px;align-items:center}
+.brandrow img{width:100%;border-radius:40px}
+ul.plain{padding-left:18px;color:var(--ink2)}ul.plain li{margin:6px 0}
+footer{padding:60px 0 80px;text-align:center;color:var(--ink4);font-size:13px;border-top:1px solid var(--line)}
+@media (max-width:900px){.c2,.c3,.flow,.swatches{grid-template-columns:1fr 1fr}.feature,.feature:nth-child(even){grid-template-columns:1fr;gap:22px}.feature:nth-child(even) .txt{order:0}.brandrow{grid-template-columns:1fr}.brandrow img{max-width:200px}}
+@media (max-width:600px){.wrap{padding:0 16px}nav.top{padding:12px 16px}nav.top a:not(.cta){display:none}.c2,.c3,.flow{grid-template-columns:1fr}.flow div:after{display:none}section{padding:72px 0}.rule{grid-template-columns:1fr;gap:4px}table{font-size:13.5px}th,td{padding:10px 6px}}
+</style>
+</head>
+<body>
+<nav class="top"><img src="brand/liminal-mark.svg" alt=""><b>Liminal</b><span class="sp"></span><a href="#problem">Problem</a><a href="#rules">Rules</a><a href="#results">Results</a><a href="https://github.com/murtuzabuilds/liminal">Code</a><a class="cta" href="./">Try it</a></nav>
+
+<header class="hero">
+  <canvas id="door" aria-hidden="true"></canvas>
+  <div class="copy">
+    <div class="eyebrow">Case study · Concept product</div>
+    <h1>A bank app that meets you <em>at the door</em></h1>
+    <p>Liminal reshapes a banking app around what each person came to do, shows why every piece is on the screen, and never moves money without a yes.</p>
+    <div class="btns"><a class="btn primary" href="./">Try the live demo</a><a class="btn" href="https://github.com/murtuzabuilds/liminal">Read the code</a></div>
+    <div class="meta"><div><b>Role</b>Product manager and designer</div><div><b>Scope</b>Strategy, engine, interface, brand</div><div><b>Stack</b>JavaScript, no dependencies</div></div>
+  </div>
+</header>
+
+<section id="problem"><div class="wrap">
+  <div class="label">The problem</div>
+  <h2>Banking apps are organised like the bank. <em>People arrive in moments.</em></h2>
+  <p class="big">Open almost any banking app and you get the same tabs. They mirror how the bank is organised, which teams own which screens.</p>
+  <div class="tabs"><span>Accounts</span><span>Cards</span><span>Pay and transfer</span><span>Insights</span><span>Help</span></div>
+  <p class="big" style="margin-top:28px">Nobody opens the app thinking in tabs. They open it because something happened.</p>
+  <div class="moments" style="margin-top:14px"><span>The hotel charged me twice</span><span>I can't find my card</span><span>Why is there a fee?</span><span>Rent is due</span><span>I owe Jonas for dinner</span></div>
+  <p class="big" style="margin-top:28px">Each of those moments is a hunt through menus. In the static app modelled here, disputing a charge takes <b data-n="disputeSteps">9</b> taps across five screens. Locking a stolen card takes <b data-n="lostSteps">7</b>. And the person doing it is often stressed, travelling, or not comfortable with apps at all.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">The bet</div>
+  <h2>Build the screen at the threshold, <em>between the need and the action.</em></h2>
+  <p class="big">Instead of one layout for everyone, Liminal treats the app as a kit of about twenty parts and assembles the screen for this person, this moment. Say what you need and the right parts arrive, already filled in from your own account.</p>
+  <p class="big">The obvious risk is that this goes badly in a bank. If the layout keeps moving, people get lost. If an AI-enabled system takes actions, money moves when it shouldn't. So the real product here is not the reshaping. It is the set of rules that make reshaping safe enough to trust.</p>
+  <div class="callout">The interesting design question was never "can the interface change?" It was "what must never change, so that everything else can?"</div>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <div class="label">Five rules it never breaks</div>
+  <h2>Guardrails first. <em>Then the magic.</em></h2>
+  <div class="rule"><div class="n">01</div><div><h3>The model shapes the layout. Only you take the action.</h3><p>Anything that moves money, locks a card or changes a limit is shown as a prepared form, followed by a confirm step and a 10 second undo. A wrong guess costs a glance, never a payment.</p></div></div>
+  <div class="rule"><div class="n">02</div><div><h3>Anchors never move.</h3><p>Balance is always first. "Show the full app" is always last. The middle changes shape, the edges don't, so nobody feels lost and the old way is always one tap away.</p></div></div>
+  <div class="rule"><div class="n">03</div><div><h3>Every block says why it is there, and every hidden one says why not.</h3><p>The reasoning panel is not a debug view. It is the trust layer: what it heard, what it understood, what in your account it checked, and what it chose to leave out.</p></div></div>
+  <div class="rule"><div class="n">04</div><div><h3>Unsure means it asks.</h3><p>Confidence needs both strength and a clear margin over the runner-up. Below the bar, Liminal shows a short "did you mean" and strips every action from the screen. It would rather ask than act on a guess.</p></div></div>
+  <div class="rule"><div class="n">05</div><div><h3>It learns only from what you tell it.</h3><p>Pins, hides and corrections. Nothing from where you hesitate or what you look at. Anchors and the confirm step can't be hidden.</p></div></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">How it works</div>
+  <h2>One request in, <em>one screen out.</em></h2>
+  <p class="big">The engine is five small steps. Each one is plain, tested JavaScript, so every decision can be inspected.</p>
+  <div class="flow">
+    <div><b>Understand</b><p>Intent, confidence, and the details that matter: who, how much, which charge.</p><code>understand.js</code></div>
+    <div><b>Ground</b><p>Checks the account. Double charges, 3am purchases at new stores, bills due, balance.</p><code>ground.js</code></div>
+    <div><b>Compose</b><p>Picks blocks, writes a reason for each, keeps anchors, adds the confirm step.</p><code>compose.js</code></div>
+    <div><b>Confirm</b><p>Nothing happens until a yes. Undo for 10 seconds.</p><code>app.js</code></div>
+    <div><b>Learn</b><p>Pins, hides and corrections, saved per person.</p><code>prefs.js</code></div>
+  </div>
+  <p class="muted" style="margin-top:22px;font-size:15px">In this prototype the Understand step is a transparent rule-based stand-in, so the demo runs offline and is fully inspectable. In a real product a language model would fill the same slot and return the same shape. Nothing downstream would change, which is the point of the design.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Walkthrough</div>
+  <h2>Same app. <em>Three very different front doors.</em></h2>
+  <div class="feature"><div class="txt"><span class="tag">Maya · just back from Lisbon</span><h3>The app noticed before she did</h3><p>Her opening screen already flags that the hotel charged her twice, two minutes apart. One tap and the dispute screen arrives with both charges side by side and the form filled in.</p><p>Static app: <b data-n="disputeSteps">9</b> taps. Liminal: <b data-n="disputeLim">3</b>.</p></div><div class="shot"><img src="docs/dispute.webp" alt="Liminal showing a double hotel charge side by side with a prefilled dispute form" loading="lazy"></div></div>
+  <div class="feature"><div class="txt"><span class="tag">Ruth · retired teacher</span><h3>Large text, plain words, a person one tap away</h3><p>Ruth's preferences make every screen bigger and simpler. When she says someone used her card at 3am, the lock button comes first, the strange charges are marked, and because it sounds urgent, a real person is on the screen too.</p></div><div class="shot"><img src="docs/ruth.webp" alt="Liminal for Ruth with large text, a lock card action and a talk to a person option" loading="lazy"></div></div>
+  <div class="feature"><div class="txt"><span class="tag">When it isn't sure</span><h3>It asks instead of guessing</h3><p>"Why is my balance lower than last week" could be several things. Liminal shows a short choice and no actions at all. Once Ruth picks, it remembers that phrasing for next time.</p></div><div class="shot"><img src="docs/clarify.webp" alt="Liminal asking a clarifying question with no actions on screen" loading="lazy"></div></div>
+  <div class="feature"><div class="txt"><span class="tag">Three people</span><h3>Ask all three the same thing</h3><p>"Lock my card" gives Maya and Theo a clean lock screen. Ruth gets the same lock, plus the two charges that are probably why she's asking, and a person who can help get the money back. Same components, same code.</p></div><div class="shot"><img src="docs/compare-lock.webp" alt="Three phones side by side showing different screens for the same request" loading="lazy"></div></div>
+  <div class="feature"><div class="txt"><span class="tag">The control</span><h3>Today's app, for comparison</h3><p>The demo includes a conventional version so the difference is visible, not claimed: eleven blocks for everyone and the tap path for the same task spelled out.</p></div><div class="shot"><img src="docs/static.webp" alt="A conventional banking home screen with the nine step path for a dispute" loading="lazy"></div></div>
+</div></section>
+
+<section id="results"><div class="wrap">
+  <div class="label">Results</div>
+  <h2>Measured in the repo, <em>including the part that isn't flattering.</em></h2>
+  <p class="big">I wrote two sets of requests. The first I used while building the rules. The second I wrote after the rules were frozen and never tuned against. These numbers are computed live from the engine on this page.</p>
+  <table>
+    <thead><tr><th></th><th>Tuned set (<span data-n="nA">30</span>)</th><th>Held-out set (<span data-n="nB">15</span>)</th></tr></thead>
+    <tbody>
+      <tr><td>Understood correctly</td><td class="hi"><b data-n="accA">100%</b></td><td class="warm"><b data-n="accB">47%</b></td></tr>
+      <tr><td>Steps to finish, static app</td><td><b data-n="stA">6.1</b></td><td><b data-n="stB">6.2</b></td></tr>
+      <tr><td>Steps to finish, Liminal</td><td class="hi"><b data-n="liA">2.4</b></td><td class="hi"><b data-n="liB">2.7</b></td></tr>
+      <tr><td>Blocks on screen (static shows <span data-n="staticShown">11</span>)</td><td><b data-n="shA">4.8</b></td><td><b data-n="shB">4.4</b></td></tr>
+      <tr><td>Misses that asked first</td><td><b data-n="caA">0</b></td><td class="hi"><b data-n="caB">6</b></td></tr>
+      <tr><td>Misses shown with confidence</td><td><b data-n="cfA">0</b></td><td class="warm"><b data-n="cfB">2</b></td></tr>
+      <tr><td>Actions that waited for a yes</td><td class="hi"><b>all</b></td><td class="hi"><b>all</b></td></tr>
+    </tbody>
+  </table>
+  <p class="big" style="margin-top:30px">The held-out accuracy is low, and I think that is the most useful result here. Hand-written rules overfit the phrasings they were built on. That is exactly why the understanding step is designed to be swapped for a model.</p>
+  <p class="big">What the product owns is how it behaves when understanding fails. On the held-out set, <b data-n="caB">6</b> of <b data-n="missB">8</b> misses were caught as "not sure" and turned into a question. The <b data-n="cfB">2</b> confident misses still could not move a cent without a yes. Better understanding raises the first row. The rules keep the last row at "all" no matter what.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">If this were a real pilot</div>
+  <h2>What I would measure, <em>and what would stop the launch.</em></h2>
+  <div class="cols c2">
+    <div class="card"><h3>Success</h3><p>Time to finish the top five jobs against the static app as control. Share of disputes and card locks started from the app instead of a call. Correction rate falling over time for each person.</p></div>
+    <div class="card"><h3>Guardrails</h3><p>Zero actions without a confirm, checked in code and in logs. Undo rate as an early sign the screen led someone wrong. How often people tap "Show the full app", as a measure of feeling lost.</p></div>
+    <div class="card"><h3>Who it is for first</h3><p>Moments with high stress and low frequency: disputes, lost cards, fees abroad. Daily balance checks gain little. A stolen card at 3am gains a lot.</p></div>
+    <div class="card"><h3>What I left out on purpose</h3><p>No learning from hesitation or gaze. No automatic actions, even "safe" ones. No hiding the confirm step for power users. Each would improve a metric and cost trust.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Identity</div>
+  <h2>Liminal: <em>the threshold.</em></h2>
+  <div class="brandrow"><img src="brand/liminal-mark.svg" alt="Liminal mark, a lavender doorway with warm light spilling out"><div>
+    <p class="big">A liminal space is the in-between, the doorway. The product lives in the moment between needing something and doing it, so the mark is a lit doorway: lavender at the top, warm at the floor, a little light spilling out toward you.</p>
+    <p class="muted">Fraunces for warmth in headlines, Manrope for clear interface text, JetBrains Mono for anything that is data. The bank inside the demo, Aurel, uses a paper-light palette so the product and the brand that would license it stay distinct.</p>
+  </div></div>
+  <div class="swatches">
+    <div class="sw" style="background:#0D0C12">Dusk<small>#0D0C12</small></div>
+    <div class="sw" style="background:#B9A6FF;color:#0D0C12">Threshold<small>#B9A6FF</small></div>
+    <div class="sw" style="background:#FFC9A8;color:#0D0C12">Glow<small>#FFC9A8</small></div>
+    <div class="sw" style="background:#6CE3C9;color:#0D0C12">Signal<small>#6CE3C9</small></div>
+    <div class="sw" style="background:#F6F3EE;color:#0D0C12">Paper<small>#F6F3EE</small></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Next</div>
+  <h2>What I would build <em>next.</em></h2>
+  <ul class="plain big">
+    <li>Put a language model in the Understand slot, constrained to the same output shape, and rerun both evaluation sets.</li>
+    <li>Grow the held-out set with real phrasing from support transcripts, with consent, and keep it frozen.</li>
+    <li>Test with people who find banking apps hard. Ruth's mode was designed from first principles and needs real users to correct it.</li>
+  </ul>
+</div></section>
+
+<footer>Liminal is a concept product designed and built by Murtuza. Aurel is a fictional bank and all data is synthetic.<br><a href="./">Live demo</a> · <a href="https://github.com/murtuzabuilds/liminal">Code</a></footer>
+
+<script type="module">
+import { evaluate, STATIC_PATHS, run } from './src/index.js';
+const a = evaluate(), b = evaluate('held-out');
+const pct = x => Math.round(x * 100) + '%';
+const V = { nA: a.n, nB: b.n, accA: pct(a.accuracy), accB: pct(b.accuracy), stA: a.staticSteps, stB: b.staticSteps, liA: a.liminalSteps, liB: b.liminalSteps, shA: a.shown, shB: b.shown, staticShown: a.staticShown,
+  caA: a.caughtMisses, caB: b.caughtMisses, cfA: a.confidentMisses, cfB: b.confidentMisses, missB: b.caughtMisses + b.confidentMisses,
+  disputeSteps: STATIC_PATHS.dispute.length, lostSteps: STATIC_PATHS.lost.length, disputeLim: run('I think the hotel in Lisbon charged me twice', 'maya').plan.steps };
+document.querySelectorAll('[data-n]').forEach(el => { if (V[el.dataset.n] !== undefined) el.textContent = V[el.dataset.n]; });
+
+// hero: a doorway of square particles with light spilling toward you
+const cv = document.getElementById('door'), c = cv.getContext('2d'); let W, H, pts = [], motes = [];
+function size() {
+  const d = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; c.setTransform(d, 0, 0, d, 0, 0);
+  pts = []; const cell = Math.max(6, Math.min(W, H) / 70), dw = Math.min(W * .36, 300), top = H * .14, bot = H * .9, cx = W / 2;
+  for (let y = top - dw / 2; y < bot; y += cell) for (let x = cx - dw / 2; x < cx + dw / 2; x += cell) {
+    const px = x + cell / 2, py = y + cell / 2, inside = py >= top ? true : Math.hypot(px - cx, py - top) <= dw / 2;
+    if (inside && py <= bot) pts.push({ x, y, k: Math.random(), f: (py - top + dw / 2) / (bot - top + dw / 2), cell });
+  }
+  motes = Array.from({ length: 90 }, () => ({ a: Math.random() * Math.PI, r: Math.random(), v: .04 + Math.random() * .08, s: 1 + Math.random() * 2.5 }));
+}
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function draw(t) {
+  c.clearRect(0, 0, W, H);
+  const g = c.createRadialGradient(W / 2, H * .92, 0, W / 2, H * .92, Math.max(W, H) * .6); g.addColorStop(0, 'rgba(255,201,168,.22)'); g.addColorStop(1, 'rgba(255,201,168,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  for (const p of pts) { const tw = .05 + .08 * (.5 + .5 * Math.sin(t / 900 + p.k * 12)); const r = 185 + 70 * p.f, gg = 166 + 35 * p.f, bb = 255 - 87 * p.f; c.fillStyle = `rgba(${r|0},${gg|0},${bb|0},${tw})`; c.fillRect(p.x + 1, p.y + 1, p.cell - 2, p.cell - 2); }
+  for (const m of motes) { const life = (t / 1000 * m.v + m.r) % 1, x = W / 2 + Math.cos(m.a) * life * W * .55, y = H * .9 - Math.sin(m.a) * life * H * .15 + life * H * .05; c.fillStyle = `rgba(255,201,168,${(1 - life) * .55})`; c.fillRect(x, y, m.s, m.s); }
+  if (!reduce) requestAnimationFrame(draw);
+}
+size(); addEventListener('resize', size); requestAnimationFrame(draw);
+</script>
+</body>
+</html>

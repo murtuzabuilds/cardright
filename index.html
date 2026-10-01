@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0D0C12">
+<title>Liminal</title>
+<meta name="description" content="Liminal is a banking app that reshapes itself around what you came to do, shows why, and never moves money without a yes.">
+<link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><img src="brand/liminal-mark.svg" alt="Liminal logo, a lit doorway"><div><b>Liminal</b><small>Interfaces that meet you at the door</small></div></div>
+  <nav class="modes" role="tablist" aria-label="View">
+    <button class="mode on" data-mode="liminal" role="tab">Liminal</button>
+    <button class="mode" data-mode="static" role="tab">Today's app</button>
+    <button class="mode" data-mode="compare" role="tab">Three people</button>
+  </nav>
+  <div class="links"><a href="case-study.html">Case study</a><a href="https://github.com/murtuzabuilds/liminal">Code</a></div>
+</header>
+
+<main class="stage" id="stage">
+  <section class="side left">
+    <p class="eyebrow">Who is using the app</p>
+    <div class="people" id="people"></div>
+    <p class="eyebrow">Try saying</p>
+    <div class="tries" id="tries"></div>
+    <p class="fine">Aurel is a fictional bank. Every person, charge and balance here is made up. Understanding runs on simple local rules so the demo works offline; in a real product a language model would fill the same slot.</p>
+  </section>
+
+  <section class="center">
+    <div class="phone" id="phone">
+      <div class="notch"></div>
+      <div class="screen" id="screen"></div>
+      <div class="sheet" id="sheet" hidden></div>
+      <div class="toast" id="toast" hidden></div>
+    </div>
+  </section>
+
+  <section class="side right" id="why" aria-live="polite"></section>
+</main>
+
+<section class="compare" id="compare" hidden>
+  <div class="cmp-head">
+    <h2>Three people. One app. Three different front doors.</h2>
+    <p>Same bank, same code, same components. Each screen is assembled from what is true in that person's account and how they like to read. Ask all three the same thing:</p>
+    <form id="askAll" class="askall"><input id="askAllIn" placeholder="e.g. lock my card" autocomplete="off"><button>Ask all three</button></form>
+    <div class="tries" id="cmpTries"></div>
+  </div>
+  <div class="cmp-row" id="cmpRow"></div>
+</section>
+
+<footer class="foot">Liminal is a concept product designed and built by Murtuza. <a href="case-study.html">Read the case study</a>.</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
