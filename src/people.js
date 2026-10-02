@@ -1,4 +1,9 @@
-// Three made-up people, their wallets, and a year of synthetic spending for each.
+// Three made-up people holding real cards, with a year of synthetic spending at real merchants.
+// The people are invented. Their situations are built from published figures: about 47% of
+// cardholders carry a balance (Bankrate, Jan 2026), the average rate on accounts charged interest is
+// 22.15% (Federal Reserve G.19, Q2 2026), and household spending levels follow the BLS Consumer
+// Expenditure Survey for 2024. See sources.js.
+//
 // CardRight never needs a card number. A wallet is just which cards you hold and a few facts about them.
 import { MERCHANTS } from './merchants.js';
 
@@ -7,44 +12,46 @@ const D = (y, m, d) => Date.UTC(y, m - 1, d, 12);
 
 export const PEOPLE = {
   maya: {
-    id: 'maya', name: 'Maya Okafor', first: 'Maya', color: '#E8B04B',
-    blurb: 'Travels for work. Pays every card in full. Loves her dining card a little too much.',
+    id: 'maya', name: 'Maya Okafor', first: 'Maya', color: '#E8B04B', redeem: 'travel',
+    blurb: 'Consultant in Chicago. Travels for work, pays every card in full, and reaches for her Gold card by reflex.',
     taxRate: 0.24,
     wallet: [
-      { id: 'northwind-table', limit: 15000, balance: 0, opened: D(2023, 4, 2), activated: [] },
-      { id: 'halden-everyday', limit: 9000, balance: 0, opened: D(2021, 2, 11) },
-      { id: 'ridgeline-rotate', limit: 6000, balance: 0, opened: D(2022, 8, 20), activated: ['2026Q2'] },
-      { id: 'aurel-voyage', limit: 12000, balance: 0, opened: D(2026, 9, 10), signup: { spent: 3620 } },
+      { id: 'amex-gold', limit: 25000, balance: 0, opened: D(2022, 4, 2) },
+      { id: 'chase-sapphire-preferred', limit: 14000, balance: 0, apr: 0.2124, opened: D(2026, 8, 25), signup: { spent: 4620 } },
+      { id: 'chase-freedom-flex', limit: 8000, balance: 0, apr: 0.2249, opened: D(2021, 8, 20), activated: ['2026Q1'] },
+      { id: 'citi-double-cash', limit: 9000, balance: 0, apr: 0.2149, opened: D(2020, 2, 11) },
+      { id: 'capone-360-debit', limit: Infinity, balance: 0, opened: D(2018, 6, 1) },
     ],
-    habit: () => 'northwind-table',
-    offers: [{ card: 'halden-everyday', merchant: 'Voltix Electronics', pct: 0.10, max: 50, active: false }, { card: 'northwind-table', merchant: 'Greenleaf Market', pct: 0.05, max: 10, active: true }],
+    habit: () => 'amex-gold',
+    offers: [],
   },
   jordan: {
-    id: 'jordan', name: 'Jordan Reyes', first: 'Jordan', color: '#C8553D',
-    blurb: 'First job out of school. Carries a balance on one card and puts everything on it.',
+    id: 'jordan', name: 'Jordan Reyes', first: 'Jordan', color: '#C8553D', redeem: 'cash',
+    blurb: 'Two years out of school. Carries a balance on the first card he ever got, and puts everything on it for the 5%.',
     taxRate: 0.12, monthlyPayment: 450,
     wallet: [
-      { id: 'ridgeline-rotate', limit: 4000, balance: 3400, carry: true, carryMonths: 3, opened: D(2023, 6, 1), activated: [] },
-      { id: 'halden-everyday', limit: 3000, balance: 0, opened: D(2024, 1, 15) },
-      { id: 'aurel-debit', limit: Infinity, balance: 0, opened: D(2022, 9, 1) },
+      { id: 'discover-it', limit: 4500, balance: 3400, apr: 0.2649, carry: true, carryMonths: 3, opened: D(2022, 9, 1), activated: ['2025Q4'] },
+      { id: 'wf-active-cash', limit: 3000, balance: 0, apr: 0.2474, opened: D(2024, 1, 15) },
+      { id: 'capone-360-debit', limit: Infinity, balance: 0, opened: D(2021, 9, 1) },
     ],
-    habit: () => 'ridgeline-rotate',
+    habit: () => 'discover-it',
     offers: [],
   },
   theo: {
-    id: 'theo', name: 'Theo Lindqvist', first: 'Theo', color: '#8DB8A2',
-    blurb: 'Freelance designer. Pays in full, but uses one personal card for everything, even work and the dentist.',
+    id: 'theo', name: 'Theo Lindqvist', first: 'Theo', color: '#8DB8A2', redeem: 'cash',
+    blurb: 'Freelance designer in Madison. Pays in full, but runs everything through one card: work, groceries, the dentist, even his taxes.',
     taxRate: 0.24,
     wallet: [
-      { id: 'halden-everyday', limit: 12000, balance: 0, opened: D(2020, 5, 5) },
-      { id: 'kiln-business', limit: 15000, balance: 0, opened: D(2024, 3, 1) },
-      { id: 'halden-gas-grocery', limit: 7000, balance: 0, opened: D(2022, 2, 9) },
-      { id: 'cobalt-one', limit: 8000, balance: 0, opened: D(2023, 11, 3) },
-      { id: 'lakeside-hsa', limit: 5200, balance: 0, opened: D(2024, 1, 1) },
+      { id: 'chase-freedom-unlimited', limit: 12000, balance: 0, apr: 0.2224, opened: D(2019, 5, 5) },
+      { id: 'chase-ink-unlimited', limit: 15000, balance: 0, apr: 0.2074, opened: D(2024, 3, 1) },
+      { id: 'amex-bcp', limit: 10000, balance: 0, apr: 0.2274, opened: D(2022, 2, 9) },
+      { id: 'capone-savor', limit: 7000, balance: 0, apr: 0.2349, opened: D(2023, 6, 14) },
+      { id: 'apple-card', limit: 8000, balance: 0, apr: 0.2249, opened: D(2023, 11, 3) },
+      { id: 'fidelity-hsa', limit: 5200, balance: 0, opened: D(2024, 1, 1) },
       { id: 'bank-transfer', limit: Infinity, balance: 0, opened: D(2015, 1, 1) },
     ],
-    habit: t => t.cat === 'taxes' ? 'bank-transfer' : 'halden-everyday',
-    offers: [{ card: 'cobalt-one', merchant: 'StreamBox', pct: 0.2, max: 6, active: true }],
+    habit: () => 'chase-freedom-unlimited',
+    offers: [],
   },
 };
 
@@ -54,30 +61,32 @@ function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 10139
 // Monthly patterns: [merchant, times per month, typical amount, spread, extra flags]
 const PATTERNS = {
   maya: [
-    ['Bean & Barrow', 9, 6.5, .3], ['Saffron Table', 3, 58, .4], ['Noodle Lab', 2, 31, .3], ['Greenleaf Market', 4, 96, .35],
-    ['Targa Superstore', 1, 74, .5], ['Pacific Fuel', 2, 44, .2], ['Hop Rides', 5, 19, .5], ['Skyway Air', .4, 420, .4],
-    ['Shopline', 3, 47, .7], ['StreamBox', 1, 15.99, 0], ['Northline Mobile', 1, 64, 0], ['Bulkhaus Club', .7, 160, .4],
-    ['Corner Hardware', .5, 38, .5], ['Lakeside Pharmacy', .6, 22, .4],
+    ['Starbucks', 8, 6.5, .3], ['Sweetgreen', 4, 16, .2], ['Neighborhood restaurant', 3, 68, .4], ['DoorDash', 2, 34, .3],
+    ['Whole Foods Market', 4, 92, .35], ["Trader Joe's", 2, 58, .3], ['Costco', .8, 170, .4], ['Target', 1, 70, .5],
+    ['Shell', 1.5, 46, .2], ['Uber', 5, 22, .5], ['Lyft', 1, 19, .4], ['City transit', 4, 5, 0],
+    ['Delta Air Lines', .4, 430, .4], ['Marriott', .3, 380, .3], ['Amazon', 3, 45, .7],
+    ['Netflix', 1, 17.99, 0], ['Spotify', 1, 11.99, 0], ['Verizon', 1, 75, 0], ['CVS', .6, 24, .4], ['Ticketmaster', .2, 140, .3], ["Macy's", .3, 90, .4],
   ],
   jordan: [
-    ['Bean & Barrow', 6, 5.5, .3], ['Noodle Lab', 3, 22, .3], ['Hilltop Grocers', 4, 61, .35], ['Pacific Fuel', 3, 38, .2],
-    ['Hop Rides', 3, 16, .5], ['Shopline', 4, 34, .7], ['StreamBox', 1, 15.99, 0], ['Northline Mobile', 1, 55, 0],
-    ['Targa Superstore', 1.5, 52, .5], ['Bulkhaus Club', .5, 110, .4], ['Lakeside Pharmacy', .5, 18, .4],
+    ['Chipotle', 6, 12, .2], ['Starbucks', 4, 6, .3], ['DoorDash', 2, 26, .3], ["Trader Joe's", 3, 55, .3], ['Kroger', 2, 62, .3],
+    ['Walmart', 1.5, 58, .5], ['Shell', 3, 38, .2], ['Uber', 2, 17, .5], ['Amazon', 4, 32, .7], ['Costco', .5, 120, .4],
+    ['Netflix', 1, 17.99, 0], ['Spotify', 1, 11.99, 0], ['Verizon', 1, 60, 0], ['Electric utility', 1, 85, .3], ['CVS', .5, 18, .4], ['AMC Theatres', .5, 28, .3],
   ],
   theo: [
-    ['Bean & Barrow', 8, 6, .3], ['Saffron Table', 2, 64, .4], ['Greenleaf Market', 5, 88, .35], ['Pacific Fuel', 3, 52, .2],
-    ['Northline Mobile', 1, 85, 0], ['StreamBox', 1, 15.99, 0], ['Figment Cloud', 1, 189, 0, { business: true }],
-    ['Kiln Print Co', 1.2, 310, .5, { business: true }], ['Skyway Air', .25, 380, .3, { business: true }],
-    ['Lakeside Pharmacy', 1, 34, .5], ['Osei Family Dental', .3, 240, .5], ['Corner Hardware', .4, 60, .6],
-    ['Voltix Electronics', .15, 1400, .3, { business: true }],
+    ['Starbucks', 8, 6, .3], ['Neighborhood restaurant', 2, 70, .4], ['Chipotle', 3, 13, .2], ['Kroger', 4, 95, .35], ['Whole Foods Market', 1.5, 80, .3],
+    ['Costco', 1, 190, .4], ['Shell', 3, 52, .2], ['Verizon', 1, 85, 0], ['Netflix', 1, 17.99, 0], ['Spotify', 1, 11.99, 0],
+    ['Adobe', 1, 59.99, 0, { business: true }], ['Figma', 1, 45, 0, { business: true }], ['Print shop', 1.2, 310, .5, { business: true }],
+    ['Delta Air Lines', .25, 380, .3, { business: true }], ['CVS', 1, 30, .5], ['Walgreens', .5, 25, .4], 
+    ["Lowe's", .4, 60, .6], ['Uber', 1, 24, .4], ['Electric utility', 1, 110, .3], ['Apple Store', .15, 1400, .3, { business: true }],
   ],
 };
 
 // One-off events that make a year real.
 const EVENTS = {
-  maya: [[D(2026, 3, 14), 'Hotel Miradouro', 412.5, { foreign: true }], [D(2026, 3, 15), 'Casa do Fado', 86.4, { foreign: true }], [D(2026, 3, 16), 'Hotel Miradouro', 412.5, { foreign: true }], [D(2025, 11, 28), 'Voltix Electronics', 1249, {}], [D(2026, 6, 2), 'Casa do Fado', 64, { foreign: true }]],
-  jordan: [[D(2025, 12, 20), 'Voltix Electronics', 899, {}], [D(2026, 8, 2), 'Skyway Air', 310, {}]],
-  theo: [[D(2026, 1, 15), 'Treasury tax payment', 3000, {}], [D(2026, 4, 15), 'Treasury tax payment', 3000, {}], [D(2026, 6, 15), 'Treasury tax payment', 3000, {}], [D(2026, 9, 15), 'Treasury tax payment', 3000, {}]],
+  maya: [[D(2025, 11, 28), 'Best Buy', 1299, {}], [D(2026, 3, 14), 'Hotel in Lisbon', 412.5, { foreign: true }], [D(2026, 3, 15), 'Restaurant in Lisbon', 86.4, { foreign: true }], [D(2026, 3, 16), 'Hotel in Lisbon', 412.5, { foreign: true }], [D(2026, 3, 17), 'Restaurant in Lisbon', 64, { foreign: true }]],
+  jordan: [[D(2025, 12, 20), 'Best Buy', 899, {}], [D(2026, 8, 2), 'Delta Air Lines', 310, {}]],
+  theo: [[D(2025, 11, 6), 'Dentist', 185, {}], [D(2026, 2, 19), 'Dentist', 1150, {}], [D(2026, 5, 12), 'Dentist', 185, {}], [D(2026, 7, 8), 'Urgent care', 220, {}],
+    [D(2026, 1, 15), 'IRS (Pay1040)', 3000, {}], [D(2026, 4, 15), 'IRS (Pay1040)', 3000, {}], [D(2026, 6, 15), 'IRS (Pay1040)', 3000, {}], [D(2026, 9, 15), 'IRS (Pay1040)', 3000, {}]],
 };
 
 export function yearOfSpending(personId) {

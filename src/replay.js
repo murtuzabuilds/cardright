@@ -12,7 +12,7 @@ const sum = (parts, ks) => parts.filter(p => ks.includes(p.k)).reduce((a, p) => 
 const GAIN = ['rewards', 'credit', 'offer', 'protect', 'bonus'];
 
 export function replay(personId, { extraCards = [], exclude = [], openAll = false } = {}) {
-  const base = PEOPLE[personId], P = exclude.length ? { ...base, wallet: base.wallet.filter(w => !exclude.includes(w.id)), habit: t => { const h = base.habit(t); return exclude.includes(h) ? null : h; } } : base, txns = yearOfSpending(personId), ctx = { offers: P.offers, taxRate: P.taxRate };
+  const base = PEOPLE[personId], P = exclude.length ? { ...base, wallet: base.wallet.filter(w => !exclude.includes(w.id)), habit: t => { const h = base.habit(t); return exclude.includes(h) ? null : h; } } : base, txns = yearOfSpending(personId), ctx = { offers: P.offers, taxRate: P.taxRate, redeem: P.redeem };
   const sA = walletState(P, { openAll }), sS = walletState(P, { openAll }), sB = walletState(P, { activateAll: true, extra: extraCards, openAll });
   const tot = { actual: 0, smart: 0, best: 0 }, buckets = { card: 0, activation: 0, interest: 0, fx: 0, tax: 0 };
   const byCat = {}, rows = [];

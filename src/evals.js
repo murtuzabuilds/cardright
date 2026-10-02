@@ -8,8 +8,8 @@ import { classify } from './merchants.js';
 // Truth for the catalog comes from the structured card data itself.
 // Fields the text never mentions are not scored (a debit card's terms say nothing about an annual fee).
 const truthFromCard = c => ({
-  fee: ['debit', 'hsa'].includes(c.type) ? undefined : c.fee, apr: c.apr || 0, fx: ['hsa', 'bank'].includes(c.type) || c.intro ? undefined : c.fx,
-  top: Math.max(c.base, ...(c.earn || []).map(r => r.rate)),
+  fee: ['debit', 'hsa'].includes(c.type) ? undefined : c.fee, apr: c.apr ? c.apr[0] : (c.type === 'credit' ? undefined : 0), fx: ['hsa', 'bank'].includes(c.type) || c.intro ? undefined : c.fx,
+  top: Math.max(c.base, ...(c.earn || []).filter(r => r.cats || r.rotating || r.applePay).map(r => r.rate)),
 });
 
 export const TERMS_HELD_OUT = [
@@ -27,8 +27,8 @@ function scoreTerms(text, truth) {
   const r = readTerms(text), checks = {};
   const top = Math.max(0, ...r.earn.map(e => e.rate));
   checks.fee = truth.fee === undefined ? true : r.fee === truth.fee;
-  checks.apr = r.apr !== undefined && Math.abs(r.apr - truth.apr) < 1e-6;
-  checks.fx = truth.fx === undefined ? true : r.fx === truth.fx;
+  checks.apr = truth.apr === undefined ? true : r.apr !== undefined && Math.abs(r.apr - truth.apr) < 1e-6;
+  checks.fx = truth.fx === undefined ? true : r.fx !== undefined && Math.abs(r.fx - truth.fx) < 1e-6; // compare with a tolerance: 2.7 / 100 is not exactly 0.027 in floating point
   checks.top = Math.abs(top - truth.top) < 1e-6;
   const right = Object.values(checks).filter(Boolean).length;
   // A miss is "caught" when the reader itself raised a flag or reported low confidence.
@@ -44,15 +44,16 @@ export function evalTerms(which = 'tuned') {
 }
 
 // ---------- merchant categories ----------
+// Labels follow the engine's categories (flights and hotels are separate, as are rideshare and public transit).
 export const MERCHANT_TUNED = [
   ['Rosa Pizza Kitchen', 'dining'], ['Northside Coffee', 'dining'], ['Fresh Fields Market', 'groceries'], ['Lakeview Grocery', 'groceries'],
-  ['Summit Fuel', 'gas'], ['Blue Air', 'travel'], ['Harbor Hotel', 'travel'], ['City Cab', 'transit'], ['Metro Parking', 'transit'],
+  ['Summit Fuel', 'gas'], ['Blue Air', 'flights'], ['Harbor Hotel', 'hotels'], ['City Cab', 'rideshare'], ['Metro Parking', 'transit'],
   ['Wave Mobile', 'phone'], ['Corner Pharmacy', 'drugstore'], ['Bright Smile Dental', 'medical'], ['Valley Electric', 'utilities'],
   ['Elm Hardware', 'home'], ['Pixel Electronics', 'electronics'], ['Price Club Warehouse', 'wholesale'], ['gadgets-online.com', 'online'],
 ];
 export const MERCHANT_HELD_OUT = [
   ['Trattoria Bella', 'dining'], ['Golden Wok', 'dining'], ['Sunrise Bagels', 'dining'], ['Village Butcher', 'groceries'],
-  ['Corner Bodega', 'groceries'], ['Speedway 4412', 'gas'], ['Delta 0062347', 'travel'], ['Seaside Motel', 'travel'],
+  ['Corner Bodega', 'groceries'], ['Speedway 4412', 'gas'], ['Delta 0062347', 'flights'], ['Seaside Motel', 'hotels'],
   ['Northern Rail', 'transit'], ['Lumen Wireless', 'phone'], ['CVS/pharmacy #102', 'drugstore'], ['Lakes Vision Center', 'medical'],
   ['Midstate Gas Company', 'utilities'], ['Home Depot 2210', 'home'], ['Best Gadgets', 'electronics'], ['Sam\'s Club 6431', 'wholesale'],
   ['Etsy.com', 'online'], ['Tuesday Market Grill', 'dining'],
