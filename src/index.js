@@ -6,7 +6,7 @@ export { replay } from './replay.js';
 export { plan, payoff } from './plan.js';
 export { readTerms } from './terms.js';
 export { FACTS, QUIRKS, DISCLAIMER } from './sources.js';
-export { evalTerms, evalMerchants, TERMS_HELD_OUT, MERCHANT_HELD_OUT, MERCHANT_TUNED } from './evals.js';
+export { evalTerms, evalMerchants, TERMS_HELD_OUT, MERCHANT_HELD_OUT, MERCHANT_TUNED, evalMerchantsModel, MODEL_MERCHANT_ANSWERS, MODEL_MERCHANT_RAN } from './evals.js';
 export { modelCategory, pickCategory, MODEL_URL } from './model.js';
 import { PEOPLE, NOW } from './people.js';
 import { MERCHANTS, classify } from './merchants.js';

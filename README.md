@@ -79,9 +79,10 @@ The two AI-shaped steps, tested on examples they were never tuned on:
 | Step | Tuned set | Held-out set | Held-out misses flagged | Misses not flagged |
 |---|---|---|---|---|
 | Fine print reader (fields) | 100% | 91% | 2 | 1 |
-| Merchant categories | 100% | 56% | 8 | 0 |
+| Merchant categories, name rules | 100% | 56% | 8 | 0 |
+| Merchant categories, model with the rules as a check | 100% | 94% | 1 | 0 |
 
-The merchant step is weak on unfamiliar names. But every miss came back marked "not sure", so the app asks instead of guessing.
+The name rules alone are weak on unfamiliar names, though every miss comes back marked "not sure", so the app asks instead of guessing. The model (gpt-oss-120b on Groq, run 10 October 2026, raw answers in `eval/results/model-merchants.json`) named 17 of the 18 held-out merchants correctly. Its one miss, Midstate Gas Company, it called a gas station and marked sure, so the app keeps the name rules as a second opinion: when they are confident and disagree with the model, the person is asked. Together: 17 of 18 right, no silent mistakes.
 
 ## What is assumed
 
@@ -113,7 +114,7 @@ npm run eval   # the results tables
 npx serve .    # open the app
 ```
 
-In this prototype the fine-print reader and the merchant classifier are transparent rule-based stand-ins, so everything runs offline. In a real product a language model would fill the same output shapes, a person would approve each card's rules, and the decision would stay with the fixed, tested math.
+Unfamiliar merchants are read by a real model (`src/model.js`): gpt-oss-120b on Groq, called through the same Cloudflare Worker and key as Umbra (`POST /category`, in the Umbra repository's `worker/`). The model only names a category from CardRight's fixed list; it never sees a card or a balance and never picks a card. Known merchants and the one-tap examples never call it, and if it is slow or down the app uses its name rules and says so. The fine-print reader is still a transparent rule-based stand-in; in a real product a model would fill the same output shape, a person would approve each card's rules, and the decision would stay with the fixed, tested math.
 
 CardRight is an independent concept project. It is not affiliated with, sponsored by or endorsed by any bank, card issuer or merchant named. Card and merchant names are trademarks of their owners. Card terms change often, so check with the issuer before deciding. Not financial advice.
 

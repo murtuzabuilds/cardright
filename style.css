@@ -171,7 +171,7 @@ td .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-rig
 .sent{padding:4px 6px;border-radius:6px;line-height:1.9}.sent.ok{background:#E3F1E9}.sent.flag{background:#FBEBDD}
 .rulesout{display:grid;gap:8px}.rulesout .r{display:grid;grid-template-columns:120px 1fr;gap:10px;font-size:13px;padding:8px 10px;border-radius:10px;background:var(--cream)}
 .rulesout .r span{color:var(--t3);font-weight:600}.rulesout .r b{font-family:var(--mono);font-weight:500}
-.evals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.evals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:16px}
 .ev{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--card)}
 .ev b{font-family:var(--display);font-size:26px;font-weight:800}.ev small{display:block;font-size:12px;color:var(--t3);line-height:1.4}
 

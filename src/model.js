@@ -25,6 +25,12 @@ export async function modelCategory(merchant, { url = MODEL_URL, fetchImpl = glo
 export function pickCategory({ chosen, known, model, rules }) {
   if (chosen) return { cat: chosen, confidence: 1, source: 'you chose' };
   if (known) return rules;
-  if (model) return { cat: model.cat, confidence: model.sure ? 0.85 : 0.5, source: `read by a model (${model.model})`, note: `${model.why ? model.why.replace(/\.?$/, '. ') : ''}The model only names the category. CardRight's engine still picks the card.` };
+  if (model) {
+    /* a second opinion: when CardRight's own name rules are confident and disagree, the person decides */
+    const clash = rules && rules.source === 'name rules' && rules.confidence >= 0.7 && rules.cat !== model.cat;
+    const why = model.why ? model.why.replace(/\.?$/, '. ') : '';
+    if (clash) return { cat: model.cat, confidence: 0.5, source: `read by a model (${model.model}) · rules disagree`, alternatives: [rules.cat], note: `The model and CardRight's name rules disagree (${model.cat} or ${rules.cat}), so pick the right one. The engine still picks the card.` };
+    return { cat: model.cat, confidence: model.sure ? 0.85 : 0.5, source: `read by a model (${model.model})`, note: `${why}The model only names the category. CardRight's engine still picks the card.` };
+  }
   return rules;
 }

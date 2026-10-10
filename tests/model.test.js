@@ -26,3 +26,19 @@ test('the card is still chosen by the engine from the category, the same way eve
   const a = recommend('maya', { merchant: 'Golden Wok', amount: 60, cat: 'dining' }), b = recommend('maya', { merchant: 'Golden Wok', amount: 60, cat: 'dining' });
   assert.equal(a.best.cardId, b.best.cardId); assert.equal(a.best.net, b.best.net);
 });
+
+import { readFileSync } from 'node:fs';
+import { evalMerchantsModel, MODEL_MERCHANT_ANSWERS } from '../src/index.js';
+
+test('the model results shown in the app match the saved raw answers', () => {
+  const raw = JSON.parse(readFileSync(new URL('../eval/results/model-merchants.json', import.meta.url), 'utf8'));
+  assert.equal(raw.rows.length, MODEL_MERCHANT_ANSWERS.size);
+  for (const r of raw.rows) assert.equal(MODEL_MERCHANT_ANSWERS.get(r.name), r.cat, r.name);
+});
+
+test('when the model and confident name rules disagree, the person is asked (Midstate Gas Company)', () => {
+  const rules = classify('Midstate Gas Company'), c = pickCategory({ chosen: null, known: false, model: { cat: 'gas', sure: true, why: 'fuel station', model: 'm' }, rules });
+  assert.equal(rules.cat, 'utilities'); assert.ok(c.confidence < 0.7); assert.deepEqual(c.alternatives, ['utilities']);
+  const held = evalMerchantsModel('held');
+  assert.deepEqual([held.right, held.n, held.silentAlone, held.silentWithRules], [17, 18, 1, 0]);
+});

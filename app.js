@@ -1,4 +1,4 @@
-import { CARDS, CATEGORY, AS_OF, MERCHANTS, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, pointValue, FACTS, QUIRKS, DISCLAIMER, modelCategory, pickCategory } from './src/index.js';
+import { CARDS, CATEGORY, AS_OF, MERCHANTS, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, evalMerchantsModel, MODEL_MERCHANT_RAN, pointValue, FACTS, QUIRKS, DISCLAIMER, modelCategory, pickCategory } from './src/index.js';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -217,7 +217,7 @@ function viewSources() {
 // ---------------- FINE PRINT ----------------
 function viewTerms() {
   if (!S.terms) S.terms = { id: 'discover-it', text: CARDS['discover-it'].terms };
-  const r = readTerms(S.terms.text), heldT = cached('evT', () => evalTerms('held')), heldM = cached('evM', () => evalMerchants('held'));
+  const r = readTerms(S.terms.text), heldT = cached('evT', () => evalTerms('held')), heldM = cached('evM', () => evalMerchants('held')), heldX = cached('evX', () => evalMerchantsModel('held'));
   const sentences = S.terms.text.replace(/\bU\.S\. /g, 'US ').split(/(?<=[A-Za-z0-9%)]\.)\s+(?=[A-Z0-9$])/).filter(Boolean);
   const flagged = new Set(r.flags.map(f => f.text));
   const rows = [];
@@ -245,6 +245,7 @@ function viewTerms() {
     <div class="evals">
       <div class="ev"><b>${Math.round(heldT.fieldAccuracy * 100)}%</b><small>of fields read correctly across ${heldT.n} new card terms. ${heldT.caught} of ${heldT.caught + heldT.silent} imperfect reads flagged themselves for review.</small></div>
       <div class="ev"><b>${Math.round(heldM.accuracy * 100)}%</b><small>of ${heldM.n} unfamiliar merchants put in the right category. All ${heldM.caught} misses came back marked "not sure", so the app asked instead of guessing.</small></div>
+      <div class="ev"><b>${heldX.right} of ${heldX.n}</b><small>right when a real model (gpt-oss-120b, run ${MODEL_MERCHANT_RAN}) named the same merchants. Its one miss came back marked sure; CardRight's name rules disagreed, so the app asks the person there too. ${heldX.silentWithRules} silent mistakes.</small></div>
     </div></div>`;
 }
 

@@ -65,3 +65,58 @@ export function evalMerchants(which = 'tuned') {
   const miss = rows.filter(r => !r.ok);
   return { which, n: rows.length, accuracy: +(rows.filter(r => r.ok).length / rows.length).toFixed(2), caught: miss.filter(r => r.unsure).length, silent: miss.filter(r => !r.unsure).length, rows };
 }
+
+// ---------- the same merchants, read by a model ----------
+// What gpt-oss-120b on Groq answered through the deployed Worker on 10 October 2026 (every answer came back "sure").
+// The raw file is eval/results/model-merchants.json, and a test checks this list still matches it.
+export const MODEL_MERCHANT_ANSWERS = new Map([
+  ["Rosa Pizza Kitchen", 'dining'],
+  ["Northside Coffee", 'dining'],
+  ["Fresh Fields Market", 'groceries'],
+  ["Lakeview Grocery", 'groceries'],
+  ["Summit Fuel", 'gas'],
+  ["Blue Air", 'flights'],
+  ["Harbor Hotel", 'hotels'],
+  ["City Cab", 'rideshare'],
+  ["Metro Parking", 'transit'],
+  ["Wave Mobile", 'phone'],
+  ["Corner Pharmacy", 'drugstore'],
+  ["Bright Smile Dental", 'medical'],
+  ["Valley Electric", 'utilities'],
+  ["Elm Hardware", 'home'],
+  ["Pixel Electronics", 'electronics'],
+  ["Price Club Warehouse", 'wholesale'],
+  ["gadgets-online.com", 'online'],
+  ["Trattoria Bella", 'dining'],
+  ["Golden Wok", 'dining'],
+  ["Sunrise Bagels", 'dining'],
+  ["Village Butcher", 'groceries'],
+  ["Corner Bodega", 'groceries'],
+  ["Speedway 4412", 'gas'],
+  ["Delta 0062347", 'flights'],
+  ["Seaside Motel", 'hotels'],
+  ["Northern Rail", 'transit'],
+  ["Lumen Wireless", 'phone'],
+  ["CVS/pharmacy #102", 'drugstore'],
+  ["Lakes Vision Center", 'medical'],
+  ["Midstate Gas Company", 'gas'],
+  ["Home Depot 2210", 'home'],
+  ["Best Gadgets", 'electronics'],
+  ["Sam's Club 6431", 'wholesale'],
+  ["Etsy.com", 'online'],
+  ["Tuesday Market Grill", 'dining'],
+]);
+export const MODEL_MERCHANT_RAN = '2026-10-10';
+
+/** Scores the model alone, and the model with CardRight's name rules as a second opinion (what the app does). */
+export function evalMerchantsModel(which = 'held') {
+  const set = which === 'tuned' ? MERCHANT_TUNED : MERCHANT_HELD_OUT;
+  const rows = set.map(([name, truth]) => {
+    const got = MODEL_MERCHANT_ANSWERS.get(name), rules = classify(name);
+    const clash = rules.source === 'name rules' && rules.confidence >= 0.7 && rules.cat !== got;
+    return { name, truth, got, ok: got === truth, flagged: clash };
+  });
+  const miss = rows.filter(r => !r.ok);
+  return { which, n: rows.length, right: rows.filter(r => r.ok).length, accuracy: +(rows.filter(r => r.ok).length / rows.length).toFixed(2),
+    silentAlone: miss.length, caughtWithRules: miss.filter(r => r.flagged).length, silentWithRules: miss.filter(r => !r.flagged).length, rows };
+}

@@ -1,0 +1,218 @@
+{
+ "ran": "2026-10-10T07:47:26Z",
+ "provider": "groq",
+ "model": "openai/gpt-oss-120b",
+ "note": "Raw answers from the deployed Worker's /category endpoint for CardRight's merchant test sets (17 tuned, 18 held out). Every answer came back marked sure. Scored by tests/model.test.js against src/evals.js.",
+ "rows": [
+  {
+   "name": "Rosa Pizza Kitchen",
+   "cat": "dining",
+   "sure": true,
+   "ms": 244
+  },
+  {
+   "name": "Northside Coffee",
+   "cat": "dining",
+   "sure": true,
+   "ms": 274
+  },
+  {
+   "name": "Fresh Fields Market",
+   "cat": "groceries",
+   "sure": true,
+   "ms": 328
+  },
+  {
+   "name": "Lakeview Grocery",
+   "cat": "groceries",
+   "sure": true,
+   "ms": 848
+  },
+  {
+   "name": "Summit Fuel",
+   "cat": "gas",
+   "sure": true,
+   "ms": 389
+  },
+  {
+   "name": "Blue Air",
+   "cat": "flights",
+   "sure": true,
+   "ms": 436
+  },
+  {
+   "name": "Harbor Hotel",
+   "cat": "hotels",
+   "sure": true,
+   "ms": 488
+  },
+  {
+   "name": "City Cab",
+   "cat": "rideshare",
+   "sure": true,
+   "ms": 427
+  },
+  {
+   "name": "Metro Parking",
+   "cat": "transit",
+   "sure": true,
+   "ms": 1585
+  },
+  {
+   "name": "Wave Mobile",
+   "cat": "phone",
+   "sure": true,
+   "ms": 258
+  },
+  {
+   "name": "Corner Pharmacy",
+   "cat": "drugstore",
+   "sure": true,
+   "ms": 367
+  },
+  {
+   "name": "Bright Smile Dental",
+   "cat": "medical",
+   "sure": true,
+   "ms": 344
+  },
+  {
+   "name": "Valley Electric",
+   "cat": "utilities",
+   "sure": true,
+   "ms": 230
+  },
+  {
+   "name": "Elm Hardware",
+   "cat": "home",
+   "sure": true,
+   "ms": 501
+  },
+  {
+   "name": "Pixel Electronics",
+   "cat": "electronics",
+   "sure": true,
+   "ms": 191
+  },
+  {
+   "name": "Price Club Warehouse",
+   "cat": "wholesale",
+   "sure": true,
+   "ms": 460
+  },
+  {
+   "name": "gadgets-online.com",
+   "cat": "online",
+   "sure": true,
+   "ms": 379
+  },
+  {
+   "name": "Trattoria Bella",
+   "cat": "dining",
+   "sure": true,
+   "ms": 255
+  },
+  {
+   "name": "Golden Wok",
+   "cat": "dining",
+   "sure": true,
+   "ms": 478
+  },
+  {
+   "name": "Sunrise Bagels",
+   "cat": "dining",
+   "sure": true,
+   "ms": 268
+  },
+  {
+   "name": "Village Butcher",
+   "cat": "groceries",
+   "sure": true,
+   "ms": 191
+  },
+  {
+   "name": "Corner Bodega",
+   "cat": "groceries",
+   "sure": true,
+   "ms": 322
+  },
+  {
+   "name": "Speedway 4412",
+   "cat": "gas",
+   "sure": true,
+   "ms": 518
+  },
+  {
+   "name": "Delta 0062347",
+   "cat": "flights",
+   "sure": true,
+   "ms": 255
+  },
+  {
+   "name": "Seaside Motel",
+   "cat": "hotels",
+   "sure": true,
+   "ms": 340
+  },
+  {
+   "name": "Northern Rail",
+   "cat": "transit",
+   "sure": true,
+   "ms": 400
+  },
+  {
+   "name": "Lumen Wireless",
+   "cat": "phone",
+   "sure": true,
+   "ms": 261
+  },
+  {
+   "name": "CVS/pharmacy #102",
+   "cat": "drugstore",
+   "sure": true,
+   "ms": 293
+  },
+  {
+   "name": "Lakes Vision Center",
+   "cat": "medical",
+   "sure": true,
+   "ms": 175
+  },
+  {
+   "name": "Midstate Gas Company",
+   "cat": "gas",
+   "sure": true,
+   "ms": 352
+  },
+  {
+   "name": "Home Depot 2210",
+   "cat": "home",
+   "sure": true,
+   "ms": 381
+  },
+  {
+   "name": "Best Gadgets",
+   "cat": "electronics",
+   "sure": true,
+   "ms": 253
+  },
+  {
+   "name": "Sam's Club 6431",
+   "cat": "wholesale",
+   "sure": true,
+   "ms": 292
+  },
+  {
+   "name": "Etsy.com",
+   "cat": "online",
+   "sure": true,
+   "ms": 254
+  },
+  {
+   "name": "Tuesday Market Grill",
+   "cat": "dining",
+   "sure": true,
+   "ms": 253
+  }
+ ]
+}

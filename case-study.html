@@ -132,12 +132,12 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <p class="big">Real cards make this concrete. Two of the cards in the demo changed their terms in the four months before I built it, and store rules like Costco's Visa-only policy decide which cards even work. The two jobs that need judgment, reading card terms and recognizing merchants, are AI-shaped. The decision itself is plain, tested arithmetic, so the same purchase always gets the same answer and every answer can be checked.</p>
   <div class="flow">
     <div class="ai"><b>Read terms</b><p>Card fine print becomes rates, caps, fees and credits. Anything unclear is flagged for a person.</p><code>terms.js</code></div>
-    <div class="ai"><b>Recognize</b><p>Merchant to category, with a confidence. Unsure means it asks.</p><code>merchants.js</code></div>
+    <div class="ai"><b>Recognize</b><p>Merchant to category. Known stores from a list; unfamiliar ones read by a real model, checked by the name rules. Unsure means it asks.</p><code>model.js · merchants.js</code></div>
     <div><b>Decide</b><p>Money kept for every way to pay, with each term shown.</p><code>optimize.js</code></div>
     <div><b>Replay</b><p>A year of spending rerun, losses split by cause.</p><code>replay.js</code></div>
     <div><b>Plan</b><p>Moves ranked by dollars, each with its math.</p><code>plan.js</code></div>
   </div>
-  <p class="big" style="margin-top:22px;font-size:16px">In this prototype the two AI steps are transparent rule-based stand-ins, so the demo runs offline. In a real product a language model would fill the same output shapes and a person would approve every new card's rules before they go live.</p>
+  <p class="big" style="margin-top:22px;font-size:16px">Recognizing merchants now runs on a real model (gpt-oss-120b on Groq), through the same small server and key as my Umbra product. The model only names a category from CardRight's fixed list; it never sees a card or a balance and never picks a card. If it is down, CardRight uses its own name rules and says so. Reading card terms is still a transparent rule-based stand-in, and a person would approve every new card's rules before they go live.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -158,9 +158,9 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <h2>Computed live from the engine, <em>including the unflattering parts.</em></h2>
   <h3 style="margin-top:20px">Wallet replay: real cards, one year of synthetic spending</h3>
   <div class="tw"><table id="replayT"><thead><tr><th>Person</th><th class="n">Spent</th><th class="n">Actually kept</th><th class="n">Could keep</th><th class="n">Left on the table</th><th>Biggest cause</th></tr></thead><tbody></tbody></table></div>
-  <h3 style="margin-top:34px">The two AI steps, on data they were never tuned on</h3>
+  <h3 style="margin-top:34px">The AI steps, on data they were never tuned on</h3>
   <div class="tw"><table id="evalT"><thead><tr><th>Step</th><th class="n">Tuned set</th><th class="n">Held-out set</th><th class="n">Held-out misses flagged</th><th class="n">Misses not flagged</th></tr></thead><tbody></tbody></table></div>
-  <p class="big" style="margin-top:24px">The merchant step is the weak link: only about half of unfamiliar names land in the right category. But every one of those misses came back marked "not sure", so the app asked instead of guessing. That is the behaviour that matters in money, and it is why a real model would replace the rules while the guardrail stays.</p>
+  <p class="big" style="margin-top:24px">The rules alone were the weak link: only about half of unfamiliar names landed in the right category, though every miss came back marked "not sure", so the app asked instead of guessing. The model, run on the same 18 held-out names, got <b>17 right</b>. Its one miss, Midstate Gas Company, it called a gas station and marked sure; it is a utility bill. That is the dangerous kind of mistake in money, so the app keeps the name rules as a second opinion: when they are confident and disagree with the model, it asks the person. With both together: 17 of 18 right, and no silent mistakes. Answers came back in about a third of a second.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -196,7 +196,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <div class="label">Next</div>
   <h2>What I would build <em>next.</em></h2>
   <ul class="plain big">
-    <li>Swap the two rule-based steps for a language model constrained to the same output, and rerun both held-out sets.</li>
+    <li>Move the fine print reader onto the model too, constrained to the same output shape, and rerun its held-out set.</li>
     <li>A card-terms pipeline with a review date on every rule. Two of the cards here changed in the four months before I built this, so stale terms are the main product risk.</li>
     <li>Statement-date planning: which card to use this week to keep each card under 30% of its limit when it reports.</li>
     <li>Interviews with people who carry balances, to test whether "stop using this card" lands as help or as judgment.</li>
@@ -206,7 +206,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <footer>CardRight is a concept product designed and built by Murtuza. It is an independent project, not affiliated with, sponsored by or endorsed by any bank, card issuer or merchant named. Card and merchant names are trademarks of their owners. Card terms are as publicly listed on 1 October 2026 and change often. The three people and their spending are fictional. Not financial advice.<br><a href="./">Live app</a> · <a href="./?v=sources">Sources</a> · <a href="https://github.com/murtuzabuilds/cardright">Code</a></footer>
 
 <script type="module">
-import { replay, evalTerms, evalMerchants, FACTS } from './src/index.js';
+import { replay, evalTerms, evalMerchants, evalMerchantsModel, FACTS } from './src/index.js';
 const m0 = v => (v < 0 ? '-' : '') + '$' + Math.abs(Math.round(v)).toLocaleString('en-US');
 const names = { maya: 'Maya, pays in full, travels', jordan: 'Jordan, carries a balance', theo: 'Theo, freelancer with an HSA' };
 const cause = { card: 'Wrong card for the purchase', activation: 'Bonus categories not turned on', fx: 'Foreign fees', interest: 'Interest on new spending', tax: 'Tax not saved' };
@@ -214,6 +214,7 @@ const R = Object.fromEntries(['maya', 'jordan', 'theo'].map(p => [p, replay(p)])
 document.querySelector('#replayT tbody').innerHTML = Object.entries(R).map(([p, r]) => `<tr><td>${names[p]}</td><td class="n">${m0(r.spend)}</td><td class="n" style="${r.actual < 0 ? 'color:var(--clay2)' : ''}">${m0(r.actual)}</td><td class="n">${m0(r.best)}</td><td class="n"><b>${m0(r.left)}</b></td><td>${cause[Object.entries(r.buckets).sort((a, b) => b[1] - a[1])[0][0]]}</td></tr>`).join('');
 const rows = [['Fine print reader (fields)', evalTerms('tuned'), evalTerms('held'), 'fieldAccuracy'], ['Merchant categories', evalMerchants('tuned'), evalMerchants('held'), 'accuracy']];
 document.querySelector('#evalT tbody').innerHTML = rows.map(([n, a, b, k]) => `<tr><td>${n}</td><td class="n">${Math.round(a[k] * 100)}%</td><td class="n">${Math.round(b[k] * 100)}%</td><td class="n">${b.caught}</td><td class="n">${b.silent}</td></tr>`).join('');
+{ const a = evalMerchantsModel('tuned'), b = evalMerchantsModel('held'); document.querySelector('#evalT tbody').insertAdjacentHTML('beforeend', `<tr><td>Merchant categories, model with the rules as a check</td><td class="n">${Math.round(a.accuracy * 100)}%</td><td class="n">${Math.round(b.accuracy * 100)}%</td><td class="n">${b.caughtWithRules}</td><td class="n">${b.silentWithRules}</td></tr>`); }
 const host = u => new URL(u).hostname.replace('www.', '');
 document.getElementById('facts').innerHTML = ['revolvers', 'apr', 'balance', 'unused'].map(k => FACTS[k]).map(f => `<div><b>${f.stat}</b><p>${f.text}</p><small>${f.source}, ${f.date} · <a href="${f.url}" target="_blank" rel="noopener">${host(f.url)}</a></small></div>`).join('');
 document.getElementById('cfpbQ').innerHTML = `"${FACTS.cfpb.text}" <a style="font-size:14px;font-weight:600" href="${FACTS.cfpb.url}" target="_blank" rel="noopener">CFPB, ${FACTS.cfpb.date}</a>`;
