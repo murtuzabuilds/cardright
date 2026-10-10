@@ -1,4 +1,4 @@
-import { CARDS, CATEGORY, AS_OF, MERCHANTS, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, pointValue, FACTS, QUIRKS, DISCLAIMER } from './src/index.js';
+import { CARDS, CATEGORY, AS_OF, MERCHANTS, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, pointValue, FACTS, QUIRKS, DISCLAIMER, modelCategory, pickCategory } from './src/index.js';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -18,6 +18,7 @@ const S = {
   pay: null, pick: null, cat: null,
   session: {}, cache: {},
   terms: null,
+  ai: {},   // merchant name -> { asking } or { r } from the model (r is null when it could not help)
 };
 const sess = () => (S.session[S.person] ||= walletState(PEOPLE[S.person]));
 const cached = (k, f) => (S.cache[S.person + k] ||= f());
@@ -34,7 +35,9 @@ function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = fals
 
 // ---------------- PAY ----------------
 function currentPurchase() {
-  const p = S.pay, c = S.cat ? { cat: S.cat, confidence: 1, source: 'you chose' } : classify(p.merchant || '');
+  const p = S.pay, a = S.ai[(p.merchant || '').toLowerCase()];
+  let c = pickCategory({ chosen: S.cat, known: !!MERCHANTS[p.merchant], model: a?.r, rules: classify(p.merchant || '') });
+  if (a?.asking && !S.cat) c = { ...c, source: c.source + ' · asking a model' };
   return { c, t: { ts: NOW, merchant: p.merchant, amount: +p.amount || 0, cat: c.cat, foreign: p.foreign || !!MERCHANTS[p.merchant]?.foreign, business: p.business } };
 }
 function partsHTML(o) {
@@ -279,11 +282,19 @@ document.addEventListener('click', e => {
   if (d.carry) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.carry); w.carry = !w.carry; if (w.carry && !w.carryMonths) w.carryMonths = 3; invalidate(); toast(w.carry ? `Got it. CardRight will keep new spending off ${CARDS[w.id].short} and count its interest.` : `${CARDS[w.id].short} is paid in full again.`); return render(); }
   if (d.activate) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.activate); w.activated = w.activated || []; const i = w.activated.indexOf('2026Q4'); i > -1 ? w.activated.splice(i, 1) : w.activated.push('2026Q4'); invalidate(); toast(i > -1 ? 'Bonus categories turned off for this quarter.' : `Activated. ${CARDS[w.id].short} now pays 5% on this quarter's categories.`); return render(); }
 });
-document.addEventListener('submit', e => { if (e.target.id !== 'payForm') return; e.preventDefault(); S.pay.merchant = $('mIn').value.trim() || S.pay.merchant; S.pay.amount = +$('aIn').value.replace(/[^0-9.]/g, '') || S.pay.amount; S.pay.foreign = !!MERCHANTS[S.pay.merchant]?.foreign; S.pick = null; S.cat = null; render(); });
+document.addEventListener('submit', e => { if (e.target.id !== 'payForm') return; e.preventDefault(); S.pay.merchant = $('mIn').value.trim() || S.pay.merchant; S.pay.amount = +$('aIn').value.replace(/[^0-9.]/g, '') || S.pay.amount; S.pay.foreign = !!MERCHANTS[S.pay.merchant]?.foreign; S.pick = null; S.cat = null; render(); askModel(); });
 document.addEventListener('change', e => {
   if (e.target.id === 'catSel') { S.cat = e.target.value; S.pick = null; render(); }
   if (e.target.id === 'termSel') { const id = e.target.value; S.terms = { id, text: id === 'custom' ? '' : CARDS[id].terms }; render(); }
 });
 document.addEventListener('input', e => { if (e.target.id === 'termTx') { S.terms = { id: S.terms.id, text: e.target.value }; const pos = e.target.selectionStart; render(); const tx = $('termTx'); tx.focus(); tx.setSelectionRange(pos, pos); } });
 document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => {}));
+/* A merchant CardRight does not know: ask the model for its category (once per name), then redraw. */
+function askModel() {
+  const name = (S.pay.merchant || '').trim(), k = name.toLowerCase();
+  if (!name || MERCHANTS[name] || S.ai[k]) return;
+  S.ai[k] = { asking: true }; render();
+  modelCategory(name).then(r => { S.ai[k] = { r }; if ((S.pay.merchant || '').toLowerCase() === k && S.view === 'pay') render(); });
+}
 render();
+askModel();
