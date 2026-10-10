@@ -62,9 +62,18 @@ const RULES = [
   ['online', /(\.com\b|\bonline\b|\bshop\b|\bstore online\b|\bmarketplace\b)/],
 ];
 
+// Known merchants are matched however they are typed: "costco", " COSTCO ", "Trader Joe’s".
+export const merchantKey = name => String(name ?? '').normalize('NFKC').replace(/[\u2018\u2019\u02BC]/g, "'").trim().replace(/\s+/g, ' ').toLowerCase();
+const BY_KEY = new Map(Object.keys(MERCHANTS).map(k => [merchantKey(k), k]));
+/** The known merchant's canonical name, or null when CardRight does not know it. */
+export const knownMerchant = name => BY_KEY.get(merchantKey(name)) ?? null;
+/** The known merchant's facts, or an empty object. */
+export const merchantInfo = name => MERCHANTS[knownMerchant(name)] || {};
+
 export function classify(name) {
-  if (MERCHANTS[name]) return { cat: MERCHANTS[name].cat, confidence: 0.99, source: 'known merchant', note: MERCHANTS[name].note };
-  const t = name.toLowerCase();
+  const known = knownMerchant(name);
+  if (known) return { cat: MERCHANTS[known].cat, confidence: 0.99, source: 'known merchant', note: MERCHANTS[known].note };
+  const t = String(name ?? '').toLowerCase();
   const hits = RULES.filter(([, re]) => re.test(t)).map(([c]) => c);
   if (!hits.length) return { cat: 'other', confidence: 0.3, source: 'no match', note: 'Not sure, so it is treated as everyday spending. You can correct it.' };
   if (hits.includes('utilities') && /gas company/.test(t)) return { cat: 'utilities', confidence: 0.8, source: 'name rules' };

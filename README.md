@@ -23,21 +23,23 @@ A 5% card at 26% APR loses money on every purchase. Rewards-first math misses th
 
 Every way to pay is scored on one number:
 
-> **Money kept** = rewards + statement credits + card offers + protections + sign-up bonus progress + tax saved, **minus** interest, foreign fees and processing fees
+> **Money kept** = rewards + statement credits + card offers + protections + tax saved, **minus** interest, foreign fees and processing fees
 
 Every term is shown, and estimates are labelled as estimates.
+
+A sign-up bonus is all or nothing, so it is never spread across purchases. CardRight projects how much would land on that card before the deadline with the cards it would pick anyway. If that is enough, the bonus changes nothing and is not counted. If it is not, the bonus becomes its own one-time line, saying how much closer the purchase gets you and the date you could miss it by, and it can change which card is picked, but it is never added to what a single purchase keeps.
 
 ## What makes it different
 
 1. **Net value, not points.** If you carry a balance, it steers new spending away from that card.
 2. **The whole wallet, across the month.** It tracks caps, quarterly activations, sign-up deadlines and how much of each card's limit you're using.
-3. **Tax-aware.** It covers HSA cards for medical bills, business cards for work spending, and the processing fee on paying taxes by card.
+3. **Tax-aware.** It counts the tax saved by covering medical bills with pre-tax HSA money (a saving that comes from the HSA, not the card, so you can pay with your best rewards card and reimburse yourself), business cards for work spending, and the processing fee on paying taxes by card.
 4. **No paid placement.** The "next card" check runs on your real spending and often says no.
 5. **No card numbers.** It only needs to know which cards you hold.
 
 ## Real cards, real rules
 
-The demo uses 16 real US cards with terms as publicly listed on 1 October 2026, including American Express Gold, Chase Sapphire Preferred, Chase Freedom Flex, Citi Double Cash, Discover it Cash Back, Wells Fargo Active Cash, Blue Cash Preferred, Capital One Savor and Apple Card. Each card carries the date it was checked and the pages it was checked against, and the app has a Sources view listing all of them.
+The demo uses 15 real US cards with terms as publicly listed on 1 October 2026: 13 credit cards (two of them only for the next-card and balance transfer checks) and 2 debit cards (a checking account and an HSA), plus a bank transfer option. They include American Express Gold, Chase Sapphire Preferred, Chase Freedom Flex, Citi Double Cash, Discover it Cash Back, Wells Fargo Active Cash, Blue Cash Preferred, Capital One Savor and Apple Card. Each card carries the date it was checked and the pages it was checked against, and the app has a Sources view listing all of them.
 
 The rules that change the answer at a real checkout are modelled too:
 
@@ -55,7 +57,7 @@ The three people and their spending are fictional. Their budgets are sized from 
 |---|---|
 | **Pay**: at Costco, three of Maya's four cards are refused, and the app says why | **Replay**: a year rerun, with losses split by cause |
 | ![](docs/pay.webp) | ![](docs/replay.webp) |
-| **Interest counted**: the 5% card loses money once the carried balance is included | **Tax-aware**: the HSA beats every rewards card for a dentist bill |
+| **Interest counted**: the 5% card loses money once the carried balance is included | **Tax-aware**: a dentist bill paid with the best rewards card, then reimbursed from the pre-tax HSA |
 | ![](docs/pay-jordan.webp) | ![](docs/pay-theo.webp) |
 | **Taxes**: a free bank transfer beats paying the IRS by card for points | **Plan**: moves ranked by dollars, each with its math |
 | ![](docs/pay-tax.webp) | ![](docs/plan-maya.webp) |
@@ -68,11 +70,11 @@ One year of synthetic spending on real cards. Run `npm run eval` to reproduce.
 
 | Person | Spent | Actually kept | Could keep | Left on the table | Biggest cause |
 |---|---|---|---|---|---|
-| Maya, pays in full, travels | $24,393 | $911 | $1,076 | $166 | Wrong card for the purchase |
+| Maya, pays in full, travels | $24,393 | $911 | $1,005 | $94 | Wrong card for the purchase |
 | Jordan, carries a balance | $13,951 | **-$702** | $327 | **$1,029** | Interest on new spending |
-| Theo, freelancer with an HSA | $39,624 | $469 | $1,216 | $747 | Tax not saved |
+| Theo, freelancer with an HSA | $39,624 | $469 | $1,242 | $773 | Tax not saved |
 
-Maya is the honest counter-example: her Gold card is a good default, so there is little to fix. The product matters most for Jordan.
+Maya is the honest counter-example: her Gold card is a good default, so there is little to fix, and she is on track for her Sapphire Preferred sign-up bonus without changing anything, so CardRight does not count it. The product matters most for Jordan.
 
 The two AI-shaped steps, tested on examples they were never tuned on:
 
@@ -98,19 +100,20 @@ Plain JavaScript, no dependencies, all in `src/` and tested.
 
 | File | What it does |
 |---|---|
-| `cards.js` | Sixteen real cards with their terms, check date and sources, plus the bank-transfer option |
+| `cards.js` | Fifteen real cards (13 credit, 2 debit) with their terms, check date and sources, plus the bank transfer option |
 | `people.js` | Three fictional people holding real cards, and a deterministic year of spending for each |
 | `merchants.js` | Real merchants, which networks they accept and how they are categorised, plus a classifier that reports confidence |
 | `optimize.js` | The net value engine: one purchase in, every way to pay scored with each term shown |
 | `replay.js` | Reruns a year three ways (actual, smart, best) to split losses by cause |
-| `plan.js` | Ranked moves: routing, interest, balance transfer, activations, HSA, fee checks, next card |
+| `plan.js` | Ranked moves: routing, interest, balance transfer, activations, HSA, sign-up bonus, fee checks, next card. One-time moves are kept out of the yearly total |
+| `session.js` | Wallet settings you can flip mid-session without losing the purchases already made |
 | `terms.js` | Reads card fine print into rules and flags what it can't read |
 | `evals.js` | Tuned and held-out sets for the two AI steps |
 | `sources.js` | Every real-world figure used, with its source and date |
 
 ```bash
-npm test       # 19 tests
-npm run eval   # the results tables
+npm test       # 32 tests
+npm run eval   # the results tables, including the model row
 npx serve .    # open the app
 ```
 

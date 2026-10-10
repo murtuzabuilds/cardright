@@ -91,8 +91,8 @@ export const CARDS = {
       '2026Q3': { cats: ['gas', 'flights', 'transit', 'drugstore'] }, '2026Q4': { cats: ['dining', 'entertainment', 'utilities'] } } }],
     protections: {},
     notes: ['Activation is required each quarter and is not retroactive.'],
-    sources: ['https://www.discover.com/credit-cards/cash-back/it-card.html', 'https://www.cnbc.com/select/discover-cash-back-calendar/', 'https://thepointsguy.com/credit-cards/activate-discover-cash-back-quarterly-categories/'],
-    terms: 'Earn 5% cash back on up to $1,500 in combined purchases in bonus categories each quarter you activate. This quarter: restaurants and utilities. Earn 1% on all other purchases. No annual fee. No foreign transaction fees. Variable APR from 18.49%.',
+    sources: ['https://www.discover.com/credit-cards/cash-back/it-card.html', 'https://www.cnbc.com/select/discover-cash-back-calendar/', 'https://thepointsguy.com/credit-cards/activate-discover-cash-back-quarterly-categories/', 'https://www.nerdwallet.com/credit-cards/news/discover-bonus-categories-q4-2026'],
+    terms: 'Earn 5% cash back on up to $1,500 in combined purchases in bonus categories each quarter you activate. This quarter: restaurants, entertainment and utilities. Earn 1% on all other purchases. No annual fee. No foreign transaction fees. Variable APR from 18.49%.',
   },
   'wf-active-cash': {
     name: 'Wells Fargo Active Cash', short: 'Active Cash', issuer: 'Wells Fargo', network: 'Visa', type: 'credit', art: ['#7A1F1F', '#C0392B'],

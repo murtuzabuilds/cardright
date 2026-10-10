@@ -1,4 +1,4 @@
-import { CARDS, CATEGORY, AS_OF, MERCHANTS, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, evalMerchantsModel, MODEL_MERCHANT_RAN, pointValue, FACTS, QUIRKS, DISCLAIMER, modelCategory, pickCategory } from './src/index.js';
+import { CARDS, CATEGORY, AS_OF, MERCHANTS, knownMerchant, merchantInfo, PEOPLE, NOW, classify, rank, apply, explain, walletState, money, replay, plan, readTerms, evalTerms, evalMerchants, evalMerchantsModel, MODEL_MERCHANT_RAN, pointValue, FACTS, QUIRKS, DISCLAIMER, modelCategory, pickCategory, toggleCarry, toggleActivate } from './src/index.js';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -22,9 +22,11 @@ const S = {
 };
 const sess = () => (S.session[S.person] ||= walletState(PEOPLE[S.person]));
 const cached = (k, f) => (S.cache[S.person + k] ||= f());
-const invalidate = () => { S.cache = {}; S.session = {}; };
-function defaultPay(p) { const [, merchant, amount, extra = {}] = PRESETS[p][0]; return { merchant, amount, foreign: !!MERCHANTS[merchant]?.foreign, business: !!extra.business }; }
-if (!S.pay) S.pay = qs.get('m') ? { merchant: qs.get('m'), amount: +(qs.get('a') || 50), foreign: false, business: qs.get('b') === '1' } : defaultPay(S.person);
+// Wallet settings change the maths, so cached replays and plans are dropped. The purchases already made
+// with "Pay with" stay: only the changed setting is copied into the live session state.
+const invalidate = () => { S.cache = {}; };
+function defaultPay(p) { const [, merchant, amount, extra = {}] = PRESETS[p][0]; return { merchant, amount, foreign: !!merchantInfo(merchant).foreign, business: !!extra.business }; }
+if (!S.pay) S.pay = qs.get('m') ? { merchant: knownMerchant(qs.get('m')) ?? qs.get('m'), amount: +(qs.get('a') || 50), foreign: false, business: qs.get('b') === '1' } : defaultPay(S.person);
 
 const art = (id, cls = 'cardart') => {
   const c = CARDS[id], [a, b] = c.art;
@@ -35,10 +37,10 @@ function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = fals
 
 // ---------------- PAY ----------------
 function currentPurchase() {
-  const p = S.pay, a = S.ai[(p.merchant || '').toLowerCase()];
-  let c = pickCategory({ chosen: S.cat, known: !!MERCHANTS[p.merchant], model: a?.r, rules: classify(p.merchant || '') });
+  const p = S.pay, known = knownMerchant(p.merchant), a = known ? null : S.ai[(p.merchant || '').trim().toLowerCase()];
+  let c = pickCategory({ chosen: S.cat, known: !!known, model: a?.r, rules: classify(p.merchant || '') });
   if (a?.asking && !S.cat) c = { ...c, source: c.source + ' · asking a model' };
-  return { c, t: { ts: NOW, merchant: p.merchant, amount: +p.amount || 0, cat: c.cat, foreign: p.foreign || !!MERCHANTS[p.merchant]?.foreign, business: p.business } };
+  return { c, t: { ts: NOW, merchant: known ?? p.merchant, amount: +p.amount || 0, cat: c.cat, foreign: p.foreign || !!merchantInfo(p.merchant).foreign, business: p.business } };
 }
 function partsHTML(o) {
   const max = Math.max(5, ...o.parts.map(p => Math.abs(p.v)));
@@ -64,9 +66,9 @@ function viewPay() {
           ${c.confidence < .7 || S.cat ? `<select id="catSel" aria-label="Correct the category">${Object.entries(CATEGORY).map(([k, v]) => `<option value="${k}" ${k === c.cat ? 'selected' : ''}>${v}</option>`).join('')}</select>` : ''}</div>
       </div>
       ${r.best ? `<div class="panel rise" style="margin-top:16px">
-        <div class="win">${art(sel.cardId)}<div><div class="lbl">${sel === r.best ? (CARDS[sel.cardId].type === 'bank' ? 'Best way to pay this' : 'Best card for this') : 'You picked'}</div><div class="big ${sel.net < 0 ? 'neg' : ''}">${Math.abs(sel.net) < 0.005 ? 'Costs you nothing' : sel.net < 0 ? `You lose ${money(-sel.net)}` : `You keep ${money(sel.net)}`}</div><p class="say">${esc(sel === r.best ? sentence : `${sel.name} keeps you ${money(sel.net)}. That is ${money(r.best.net - sel.net)} less than ${r.best.name}.`)}</p></div></div>
+        <div class="win">${art(sel.cardId)}<div><div class="lbl">${sel === r.best ? (CARDS[sel.cardId].type === 'bank' ? 'Best way to pay this' : 'Best card for this') : 'You picked'}</div><div class="big ${sel.net < 0 ? 'neg' : ''}">${Math.abs(sel.net) < 0.005 ? 'Costs you nothing' : sel.net < 0 ? `You lose ${money(-sel.net)}` : `You keep ${money(sel.net)}`}</div><p class="say">${esc(sel === r.best ? sentence : `${sel.net < 0 ? `${sel.name} loses you ${money(-sel.net)}` : `${sel.name} keeps you ${money(sel.net)}`}. ${Math.abs(r.best.net - sel.net) < 0.005 ? `It ties with ${r.best.name}.` : sel.net > r.best.net ? `That is ${money(sel.net - r.best.net)} more than ${r.best.name} on this purchase, but ${r.best.name} is the pick because of its sign-up bonus.` : `That is ${money(r.best.net - sel.net)} less than ${r.best.name}.`}`)}</p></div></div>
         <div class="parts">${partsHTML(sel)}</div>
-        ${sel.tips.map(x => `<div class="tip" style="margin-top:10px">${ICON.tip}<span>${esc(x.text)}</span></div>`).join('')}
+        ${sel.tips.map(x => `<div class="tip${x.k === 'bonus' ? ' bonus' : ''}" style="margin-top:10px">${ICON.tip}<span>${esc(x.text)}</span></div>`).join('')}
         <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn" data-commit="${sel.cardId}">Pay with ${esc(sel.name)}</button>${sel !== r.best ? `<button class="btn ghost" data-pick="${r.best.cardId}">Back to the best card</button>` : ''}</div>
       </div>
       <div class="panel" style="margin-top:16px"><div class="k"><span>Every way to pay</span><span>you keep</span></div><div class="opts">
@@ -76,7 +78,7 @@ function viewPay() {
     </div>
     ${r.best ? `<div class="phone" aria-label="What CardRight shows at checkout"><div class="notch"></div><div class="scr">
       <div class="time">9:41</div><div class="date">Thursday, October 1</div>
-      <div class="notif"><img src="brand/cardright-mark.svg" alt=""><div><div class="t"><span>CARDRIGHT</span><span>now</span></div><b>${CARDS[r.best.cardId].type === 'bank' ? 'Pay this by bank transfer' : `Tap ${esc(r.best.name)} here`}</b><p>${esc(t.merchant)}, ${money(t.amount)}. ${Math.abs(r.best.net) < 0.005 ? 'It is free' : `You keep ${money(r.best.net)}`}${r.options[1] ? `, ${money(r.best.net - r.options[1].net)} better than ${esc(r.options[1].name)}` : ''}.</p></div></div>
+      <div class="notif"><img src="brand/cardright-mark.svg" alt=""><div><div class="t"><span>CARDRIGHT</span><span>now</span></div><b>${CARDS[r.best.cardId].type === 'bank' ? 'Pay this by bank transfer' : `Tap ${esc(r.best.name)} here`}</b><p>${esc(t.merchant)}, ${money(t.amount)}. ${Math.abs(r.best.net) < 0.005 ? 'It is free' : `You keep ${money(r.best.net)}`}${r.best.signup ? ', and it moves a sign-up bonus forward' : r.options[1] ? (Math.abs(r.best.net - r.options[1].net) < 0.005 ? `, the same as ${esc(r.options[1].name)}` : `, ${money(r.best.net - r.options[1].net)} better than ${esc(r.options[1].name)}`) : ''}.</p></div></div>
       <div class="wcard">${art(r.best.cardId)}</div>${CARDS[r.best.cardId].type === 'bank' ? '<div class="tap" style="margin-top:18px">No card needed</div>' : '<div class="tapring"></div><div class="tap">Hold near the reader</div>'}
     </div></div>` : ''}
   </div>`;
@@ -88,7 +90,7 @@ const BUCKETS = [
   ['activation', 'Bonus categories not turned on', 'var(--c-act)', 'Rotating 5% on Freedom Flex or Discover only pays in quarters you activate'],
   ['fx', 'Foreign transaction fees', 'var(--c-fx)', 'Fees a no-FX card would have avoided'],
   ['interest', 'Interest on new spending', 'var(--c-int)', 'Purchases on a card you carry a balance on'],
-  ['tax', 'Tax you could have saved', 'var(--c-tax)', 'Medical costs paid with after-tax money instead of the HSA'],
+  ['tax', 'Tax you could have saved', 'var(--c-tax)', 'Medical bills paid with after-tax money instead of pre-tax HSA money'],
 ];
 function lineChart(R) {
   const months = [], acc = { a: 0, b: 0 };
@@ -132,7 +134,7 @@ function bindLine(R) {
 }
 function viewReplay() {
   const R = cached('replay', () => replay(S.person)), P = PEOPLE[S.person], tot = Object.values(R.buckets).reduce((a, v) => a + Math.max(0, v), 0) || 1;
-  const story = { maya: 'She pays in full and her Gold card is a good default for dining and groceries, so she is close to optimal. The gaps are Amazon, gas and rides, where a flat 2% card beats 1X points, and the quarters she forgot to activate her Freedom Flex.', jordan: 'His Discover pays 5% in bonus quarters, which feels great. But he carries a balance on it at 26.49%, so every purchase starts paying interest the day he makes it. The rewards never stood a chance.', theo: 'He pays in full and stays organised, but everything goes on one 1.5% card. Groceries belong on his 6% card, the dentist on his pre-tax HSA, and paying the IRS by card cost him more in fees than it earned.' }[S.person];
+  const story = { maya: 'She pays in full and her Gold card is a good default for dining and groceries, so she is close to optimal. The gaps are Amazon, gas and rides, where a flat 2% card beats 1X points, and the quarters she forgot to activate her Freedom Flex.', jordan: 'His Discover pays 5% in bonus quarters, which feels great. But he carries a balance on it at 26.49%, so every purchase starts paying interest the day he makes it. The rewards never stood a chance.', theo: 'He pays in full and stays organised, but everything goes on one 1.5% card. Groceries belong on his 6% card, his medical bills should come out of his pre-tax HSA (he can still pay by card and reimburse himself), and paying the IRS by card cost him more in fees than it earned.' }[S.person];
   return `<div class="h"><div><h1>Your last year, rerun</h1><p>CardRight replays ${R.n} purchases from the last 12 months, picks the best card for each one, and shows exactly where the difference came from.</p></div></div>
   <div class="hero">
     <div class="lead rise"><div class="k"><span>${esc(P.first)} · Oct 2025 to Sep 2026</span></div><div class="num" data-count="${R.left}">${m0(R.left)}</div><p>left on the table last year. ${esc(story)}</p>
@@ -156,11 +158,11 @@ function viewPlan() {
   const actHTML = (a, i, tidy) => `<div class="act ${tidy ? 'tidy' : ''} rise" style="animation-delay:${i * 50}ms"><div class="rk">${tidy ? '✓' : i + 1}</div><div><h3>${esc(a.title)}</h3>
     ${a.rules ? `<div class="rules">${a.rules.map(r => `<div><b>${esc(r.cat)} → ${esc(r.card)}</b><span>+${money(r.v)}</span></div>`).join('')}</div>` : ''}
     <details ${i === 0 && !tidy ? 'open' : ''}><summary>Show the math ▾</summary><div class="math">${esc(a.math)}</div></details></div>
-    ${tidy ? '' : `<div class="v">+${m0(a.v)}<small>${a.k === 'signup' ? 'one time' : 'a year'}</small></div>`}</div>`;
+    ${tidy ? '' : `<div class="v">+${m0(a.v)}<small>${a.oneTime ? 'one time' : a.saves ? 'saved a year' : 'a year'}</small></div>`}</div>`;
   return `<div class="h"><div><h1>${esc(P.first)}'s plan</h1><p>A short list of moves, ranked by what they are worth to you. Every number comes from ${esc(P.first)}'s own spending, and every one shows its math.</p></div></div>
   <div class="plan"><div>${pl.actions.map((a, i) => actHTML(a, i)).join('')}
     ${pl.tidy.length ? `<div class="k" style="margin:22px 0 10px"><span>Checked, nothing to do</span></div>${pl.tidy.map((a, i) => actHTML(a, i, true)).join('')}` : ''}</div>
-    <div class="sumcard rise"><div class="k"><span>Worth about</span></div><div class="num">${m0(pl.total)}</div><p>over the next year if ${esc(P.first)} makes these moves. Some are one-time, like a sign-up bonus. The rest repeat every year.</p>
+    <div class="sumcard rise"><div class="k"><span>Worth about</span></div><div class="num">${m0(pl.total)}</div><p>a year if ${esc(P.first)} makes these moves, and every year after.${pl.oneTime > 0.5 ? ` Plus about ${m0(pl.oneTime)} one time, from ${pl.actions.filter(x => x.oneTime).map(x => x.k === 'transfer' ? 'the balance transfer' : 'a sign-up bonus').join(' and ')}, kept out of that total.` : ''}</p>
       <p style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)">CardRight never takes money from banks for recommendations. When no new card is worth it, it says so.</p></div></div>`;
 }
 
@@ -269,7 +271,7 @@ document.addEventListener('click', e => {
   if (d.redeem) { PEOPLE[S.person].redeem = d.redeem; invalidate(); toast(d.redeem === 'travel' ? 'Points now valued for travel transfers.' : 'Points now valued as cash, at 1¢ each.'); return render(); }
   if (d.who) { S.person = d.who; S.pay = defaultPay(d.who); S.pick = null; S.cat = null; return render(); }
   if (d.v) { S.view = d.v; window.scrollTo({ top: 0 }); return render(); }
-  if (d.preset) { const [m, a, b] = d.preset.split('|'); S.pay = { merchant: m, amount: +a, foreign: !!MERCHANTS[m]?.foreign, business: b === '1' }; S.pick = null; S.cat = null; return render(); }
+  if (d.preset) { const [m, a, b] = d.preset.split('|'); S.pay = { merchant: m, amount: +a, foreign: !!merchantInfo(m).foreign, business: b === '1' }; S.pick = null; S.cat = null; return render(); }
   if (d.tog) { S.pay[d.tog] = !S.pay[d.tog]; S.pick = null; return render(); }
   if (d.pick) { S.pick = d.pick === S.pick ? null : d.pick; return render(); }
   if (d.commit) {
@@ -280,10 +282,10 @@ document.addEventListener('click', e => {
     toast(done ? `Paid. That completes the ${CARDS[d.commit].short} sign-up bonus. Recommendations will change now.` : `Paid with ${CARDS[d.commit].short}. Caps, credits and bonus progress updated.`);
     S.pick = null; return render();
   }
-  if (d.carry) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.carry); w.carry = !w.carry; if (w.carry && !w.carryMonths) w.carryMonths = 3; invalidate(); toast(w.carry ? `Got it. CardRight will keep new spending off ${CARDS[w.id].short} and count its interest.` : `${CARDS[w.id].short} is paid in full again.`); return render(); }
-  if (d.activate) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.activate); w.activated = w.activated || []; const i = w.activated.indexOf('2026Q4'); i > -1 ? w.activated.splice(i, 1) : w.activated.push('2026Q4'); invalidate(); toast(i > -1 ? 'Bonus categories turned off for this quarter.' : `Activated. ${CARDS[w.id].short} now pays 5% on this quarter's categories.`); return render(); }
+  if (d.carry) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.carry); toggleCarry(PEOPLE[S.person], [S.session[S.person]], w.id); invalidate(); toast(w.carry ? `Got it. CardRight will keep new spending off ${CARDS[w.id].short} and count its interest.` : `${CARDS[w.id].short} is paid in full again.`); return render(); }
+  if (d.activate) { const w = PEOPLE[S.person].wallet.find(x => x.id === d.activate); const on = toggleActivate(PEOPLE[S.person], [S.session[S.person]], w.id, '2026Q4'); invalidate(); toast(!on ? 'Bonus categories turned off for this quarter.' : `Activated. ${CARDS[w.id].short} now pays 5% on this quarter's categories.`); return render(); }
 });
-document.addEventListener('submit', e => { if (e.target.id !== 'payForm') return; e.preventDefault(); S.pay.merchant = $('mIn').value.trim() || S.pay.merchant; S.pay.amount = +$('aIn').value.replace(/[^0-9.]/g, '') || S.pay.amount; S.pay.foreign = !!MERCHANTS[S.pay.merchant]?.foreign; S.pick = null; S.cat = null; render(); askModel(); });
+document.addEventListener('submit', e => { if (e.target.id !== 'payForm') return; e.preventDefault(); const typed = $('mIn').value.trim().replace(/\s+/g, ' '); S.pay.merchant = typed ? knownMerchant(typed) ?? typed : S.pay.merchant; S.pay.amount = +$('aIn').value.replace(/[^0-9.]/g, '') || S.pay.amount; S.pay.foreign = !!merchantInfo(S.pay.merchant).foreign; S.pick = null; S.cat = null; render(); askModel(); });
 document.addEventListener('change', e => {
   if (e.target.id === 'catSel') { S.cat = e.target.value; S.pick = null; render(); }
   if (e.target.id === 'termSel') { const id = e.target.value; S.terms = { id, text: id === 'custom' ? '' : CARDS[id].terms }; render(); }
@@ -293,7 +295,7 @@ document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click
 /* A merchant CardRight does not know: ask the model for its category (once per name), then redraw. */
 function askModel() {
   const name = (S.pay.merchant || '').trim(), k = name.toLowerCase();
-  if (!name || MERCHANTS[name] || S.ai[k]) return;
+  if (!name || knownMerchant(name) || S.ai[k]) return;
   S.ai[k] = { asking: true }; render();
   modelCategory(name).then(r => { S.ai[k] = { r }; if ((S.pay.merchant || '').toLowerCase() === k && S.view === 'pay') render(); });
 }
