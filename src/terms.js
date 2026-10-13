@@ -47,7 +47,7 @@ export function readTerms(text) {
     const apr = s.match(/(\d+(?:\.\d+)?)% ?(?:variable )?apr|apr (?:of|from) (\d+(?:\.\d+)?)%/); if (apr && !/intro/.test(s)) { out.apr = +(apr[1] || apr[2]) / 100; used = true; }
     if (/no foreign transaction fees?/.test(s)) { out.fx = 0; used = true; }
     else { const fx = s.match(/foreign transaction fee(?: of|:)? (\d+(?:\.\d+)?)%/); if (fx) { out.fx = +fx[1] / 100; used = true; } }
-    const bonus = s.match(/\$([\d,]+) bonus after you spend \$([\d,]+).*?(?:first )?(\d+|three|six) months?/); if (bonus) { out.signup = { bonus: num(bonus[1]), spend: num(bonus[2]), months: WORDS[bonus[3]] || +bonus[3] }; used = true; }
+    const bonus = s.match(/(?:\$([\d,]+) bonus|([\d,]+) bonus points) after you spend \$([\d,]+).*?(?:first )?(\d+|three|six) months?/); if (bonus) { out.signup = { ...(bonus[1] ? { bonus: num(bonus[1]) } : { points: num(bonus[2]) }), spend: num(bonus[3]), months: WORDS[bonus[4]] || +bonus[4] }; used = true; }
     const credit = s.match(/up to \$([\d,]+) in statement credits each (month|year)/); if (credit) { out.credits = [{ amount: num(credit[1]), period: credit[2] }]; used = true; }
     const war = s.match(/extended warranty adds (one|two|\d+) (?:additional )?years?/); if (war) { out.warrantyMonths = 12 * (WORDS[war[1]] || +war[1]); used = true; }
     if (/cell phone protection/.test(s)) { out.phone = true; used = true; }

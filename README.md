@@ -112,7 +112,7 @@ Plain JavaScript, no dependencies, all in `src/` and tested.
 | `sources.js` | Every real-world figure used, with its source and date |
 
 ```bash
-npm test       # 32 tests
+npm test       # 34 tests
 npm run eval   # the results tables, including the model row
 npx serve .    # open the app
 ```

@@ -3,7 +3,8 @@
 // CardRight is an independent concept project. It is not affiliated with, sponsored by or endorsed by
 // any issuer named here. Card names are trademarks of their owners. Terms change often: every card
 // carries the date it was checked and the pages it was checked against, and anything that could not
-// be confirmed is left out or noted rather than guessed.
+// be confirmed is left out or noted rather than guessed. Cards with a `checked` date were re-read
+// on the issuer's own page on that date; the rest were checked on AS_OF.
 //
 // rate is points (or percent) per dollar. pv is what one point is worth in dollars:
 //   pv.cash    the baseline value when redeemed simply
@@ -24,17 +25,18 @@ export const CARDS = {
     ],
     credits: [
       { name: 'Dining credit', amount: 10, period: 'month', merchants: ['Grubhub', 'The Cheesecake Factory', 'Five Guys', 'Buffalo Wild Wings', 'Wonder'], note: 'Enrollment required' },
-      { name: 'Uber Cash', amount: 10, period: 'month', merchants: ['Uber', 'Uber Eats'] },
+      { name: 'Uber Cash', amount: 10, period: 'month', merchants: ['Uber', 'Uber Eats'], note: 'Add the Gold Card to your Uber account first' },
       { name: "Dunkin' credit", amount: 7, period: 'month', merchants: ["Dunkin'"], note: 'Enrollment required' },
     ],
     protections: { warrantyMonths: 12, purchase: true },
-    notes: ['A charge card with Pay Over Time. Its interest rate is not published on the pages checked, so it is not modelled here.', 'US supermarkets exclude superstores such as Walmart and Target, and warehouse clubs.'],
+    notes: ['A charge card with Pay Over Time. Its interest rate is not published on the pages checked, so it is not modelled here.', 'US supermarkets exclude superstores such as Walmart and Target, and warehouse clubs.', 'Uber Cash ($10 a month) only arrives once the Gold Card is added to your Uber account, and only for US rides and orders paid with an Amex card.'],
+    checked: '2026-10-12',
     sources: ['https://www.americanexpress.com/us/credit-cards/card/gold-card/', 'https://upgradedpoints.com/credit-cards/reviews/american-express-gold-card/dining-credit/', 'https://www.americanexpress.com/us/rewards-info/retail.html'],
     terms: 'Earn 4X points at restaurants worldwide on up to $50,000 per year, then 1X. Earn 4X points at US supermarkets on up to $25,000 per year, then 1X. Earn 3X points on flights. Earn 1X points on all other purchases. Up to $10 in statement credits each month at participating dining partners. Annual fee of $325. No foreign transaction fees.',
   },
   'chase-sapphire-preferred': {
     name: 'Chase Sapphire Preferred', short: 'Sapphire Preferred', issuer: 'Chase', network: 'Visa', type: 'credit', art: ['#12305C', '#2C5FA8'],
-    fee: 95, apr: [0.1924, 0.2749], fx: 0, pv: { cash: 0.01, travel: 0.014 }, currency: 'Ultimate Rewards points', base: 1,
+    fee: 95, apr: [0.1949, 0.2774], fx: 0, pv: { cash: 0.01, travel: 0.014 }, currency: 'Ultimate Rewards points', base: 1,
     earn: [
       { merchants: ['Lyft'], rate: 5, label: 'Lyft, through 30 Sep 2027' },
       { cats: ['dining'], rate: 3 }, { cats: ['streaming'], rate: 3 }, { cats: ['gas'], rate: 3 },
@@ -42,9 +44,10 @@ export const CARDS = {
     ],
     protections: { warrantyMonths: 12, purchase: true, travel: true },
     signup: { points: 75000, spend: 5000, days: 90 },
-    notes: ['5X applies to travel booked through Chase Travel, which is not modelled.', 'Gas stations were added at 3X on 15 Jun 2026.'],
+    notes: ['5X applies to travel booked through Chase Travel, which is not modelled.', 'Gas stations were added at 3X on 15 Jun 2026. EV charging and online grocery also earn 3X but are not modelled.', 'Chase states the bonus in points, not dollars. Its dollar value here depends on how points are redeemed: about $750 as cash, about $1,050 transferred to travel.'],
+    checked: '2026-10-12',
     sources: ['https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred', 'https://www.nerdwallet.com/credit-cards/reviews/chase-sapphire-preferred', 'https://media.chase.com/news/Meet-the-New-Chase-Sapphire-Preferred'],
-    terms: 'Earn 3X points on dining. Earn 3X points on streaming services. Earn 3X points at gas stations. Earn 2X points on travel. Earn 1X points on all other purchases. Earn a $750 bonus after you spend $5,000 on purchases in the first 3 months. Annual fee of $95. No foreign transaction fees. Variable APR from 19.24%.',
+    terms: 'Earn 3X points on dining. Earn 3X points on streaming services. Earn 3X points at gas stations. Earn 2X points on travel. Earn 1X points on all other purchases. Earn 75,000 bonus points after you spend $5,000 on purchases in the first 3 months. Annual fee of $95. No foreign transaction fees. Variable APR from 19.49%.',
   },
   'chase-freedom-flex': {
     name: 'Chase Freedom Flex', short: 'Freedom Flex', issuer: 'Chase', network: 'Mastercard', type: 'credit', art: ['#1B4E7A', '#3E8BC4'],
@@ -57,6 +60,7 @@ export const CARDS = {
     ],
     protections: { warrantyMonths: 12, purchase: true },
     notes: ['The foreign transaction fee was removed in September 2026.', 'Cell phone protection ended on 20 Sep 2026.', 'Grocery stores exclude Walmart and Target.'],
+    checked: '2026-10-12',
     sources: ['https://creditcards.chase.com/cash-back-credit-cards/freedom/flex', 'https://media.chase.com/news/chase-freedom-2026-q4-categories', 'https://www.nerdwallet.com/credit-cards/learn/chase-freedom-calendar'],
     terms: 'Earn 5% cash back on up to $1,500 in combined purchases in bonus categories each quarter you activate. This quarter: grocery stores and restaurants. Earn 3% on dining and 3% at drugstores. Earn 1% on all other purchases. No annual fee. No foreign transaction fees. Variable APR from 18.49%.',
   },
@@ -127,13 +131,15 @@ export const CARDS = {
     name: 'Apple Card', short: 'Apple Card', issuer: 'Goldman Sachs', network: 'Mastercard', type: 'credit', art: ['#8E949B', '#D5D9DE'], dark: true,
     fee: 0, apr: [0.1749, 0.2774], fx: 0, pv: cash, currency: 'Daily Cash', base: 1,
     earn: [
-      { merchants: ['Apple Store', 'Uber', 'Uber Eats', 'Walgreens', 'Exxon'], applePay: true, rate: 3, label: '3% at Apple and select merchants with Apple Pay' },
+      { merchants: ['Apple Store'], rate: 3, label: '3% at Apple, however you pay' },
+      { merchants: ['Ace Hardware', 'Booking.com', 'ChargePoint', 'Duane Reade', 'Exxon', 'Hertz', 'Nike', 'Uber', 'Uber Eats', 'Walgreens'], applePay: true, rate: 3, label: '3% at select merchants with Apple Pay' },
       { applePay: true, rate: 2, label: '2% with Apple Pay' },
     ],
     protections: {},
-    notes: ['2% applies only when paying with Apple Pay. The physical card earns 1%.'],
-    sources: ['https://www.apple.com/apple-card/', 'https://learn.applecard.apple/unlimited-daily-cash'],
-    terms: 'Earn 3% Daily Cash at Apple and select merchants when you use Apple Pay. Earn 2% on every purchase with Apple Pay. Earn 1% on all other purchases. No annual fee. No foreign transaction fees. Variable APR from 17.49%.',
+    notes: ['3% at Apple covers everything bought from Apple (devices, App Store, Apple services), with or without Apple Pay.', '3% at partner merchants and 2% everywhere else need Apple Pay. The physical card earns 1% there.'],
+    checked: '2026-10-12',
+    sources: ['https://www.apple.com/apple-card/'],
+    terms: 'Earn 3% Daily Cash on everything you buy at Apple. Earn 3% at select merchants when you use Apple Pay. Earn 2% on every purchase with Apple Pay. Earn 1% on all other purchases. No annual fee. No foreign transaction fees. Variable APR from 17.49%.',
   },
   'capone-360-debit': {
     name: 'Capital One 360 Checking debit', short: '360 Checking debit', issuer: 'Capital One', network: 'Debit', type: 'debit', art: ['#2A2F36', '#4A525C'],

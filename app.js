@@ -205,7 +205,7 @@ function viewSources() {
   <div class="panel" style="margin-top:16px"><div class="k"><span>Rules that change the answer at checkout</span></div><div class="qlist">${QUIRKS.map(q => `<div><p>${esc(q.text)}</p><small>${esc(q.source)} · ${link(q.url)}</small></div>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px"><div class="k"><span>Card terms</span><span>as of ${AS_OF}</span></div>
     <div class="tscroll"><table style="min-width:640px"><thead><tr><th>Card</th><th>Network</th><th class="r">Annual fee</th><th class="r">APR range</th><th>Checked against</th></tr></thead><tbody>
-    ${Object.values(CARDS).filter(c => c.type !== 'bank').map(c => `<tr><td><b>${esc(c.name)}</b>${c.market ? '<div class="note">Not in any wallet. Used for the next-card and balance transfer checks.</div>' : ''}</td><td>${esc(c.network)}</td><td class="r">${m0(c.fee)}</td><td class="r">${c.apr ? (c.apr[0] * 100).toFixed(2) + ' to ' + (c.apr[1] * 100).toFixed(2) + '%' : 'n/a'}</td><td>${c.sources.map(link).join(', ')}</td></tr>`).join('')}
+    ${Object.values(CARDS).filter(c => c.type !== 'bank').map(c => `<tr><td><b>${esc(c.name)}</b>${c.market ? '<div class="note">Not in any wallet. Used for the next-card and balance transfer checks.</div>' : ''}${c.checked ? `<div class="note">Re-checked on the issuer page, ${esc(c.checked)}</div>` : ''}</td><td>${esc(c.network)}</td><td class="r">${m0(c.fee)}</td><td class="r">${c.apr ? (c.apr[0] * 100).toFixed(2) + ' to ' + (c.apr[1] * 100).toFixed(2) + '%' : 'n/a'}</td><td>${c.sources.map(link).join(', ')}</td></tr>`).join('')}
     </tbody></table></div></div>
   <div class="panel" style="margin-top:16px"><div class="k"><span>What is assumed, not sourced</span></div><div class="qlist">
     <div><p>A carried balance costs about three months of interest on each new purchase. This is an estimate of how long a purchase sits on a balance that is being paid down.</p></div>
@@ -227,7 +227,7 @@ function viewTerms() {
   if (r.fee !== undefined) rows.push(['Annual fee', m0(r.fee)]);
   if (r.apr !== undefined) rows.push(['APR', (r.apr * 100).toFixed(2) + '%']);
   if (r.fx !== undefined) rows.push(['Foreign fee', r.fx ? (r.fx * 100) + '%' : 'None']);
-  if (r.signup) rows.push(['Sign-up bonus', `${m0(r.signup.bonus)} after ${m0(r.signup.spend)} in ${r.signup.months} months`]);
+  if (r.signup) rows.push(['Sign-up bonus', `${r.signup.points ? r.signup.points.toLocaleString('en-US') + ' points' : m0(r.signup.bonus)} after ${m0(r.signup.spend)} in ${r.signup.months} months`]);
   if (r.credits) rows.push(['Credits', r.credits.map(c => `${m0(c.amount)} a ${c.period}`).join(', ')]);
   if (r.warrantyMonths) rows.push(['Warranty', `+${r.warrantyMonths} months`]);
   if (r.intro) rows.push(['Intro APR', `${r.intro.apr * 100}% for ${r.intro.months} months`]);

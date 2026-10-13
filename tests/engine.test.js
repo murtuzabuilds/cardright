@@ -58,7 +58,21 @@ test('Apple Pay rates need a merchant that takes Apple Pay', () => {
   const w = opt(recommend('theo', { merchant: 'Walmart', amount: 100 }), 'apple-card');
   assert.equal(w.rewards, 1);
   assert.ok(w.tips.some(t => t.k === 'applepay'));
-  assert.equal(opt(recommend('theo', { merchant: 'Walgreens', amount: 100 }), 'apple-card').rewards, 3);
+  assert.equal(opt(recommend('theo', { merchant: 'Walgreens', amount: 100 }), 'apple-card').rewards, 3);});
+
+test('Apple Card: 3% at Apple needs no Apple Pay, partner 3% does (apple.com, 12 Oct 2026)', () => {
+  const st = walletState(PEOPLE.theo);
+  const at = (merchant, cat, applePay) => evaluate('apple-card', st['apple-card'], { ts: NOW, merchant, amount: 100, cat, applePay }, { redeem: 'cash' }).rewards;
+  assert.equal(at('Apple Store', 'electronics', false), 3, 'physical card at Apple still earns 3%');
+  assert.equal(at('Apple Store', 'electronics', true), 3);
+  assert.equal(at('Walgreens', 'drugstore', false), 1, 'partner 3% needs Apple Pay');
+  assert.equal(at('Walgreens', 'drugstore', true), 3);
+});
+
+test('a points sign-up bonus is read as points, not flagged', () => {
+  const r = readTerms(CARDS['chase-sapphire-preferred'].terms);
+  assert.deepEqual(r.signup, { points: 75000, spend: 5000, months: 3 });
+  assert.equal(r.apr, 0.1949);
 });
 
 test('points are worth more for travel than for cash', () => {
