@@ -1,7 +1,7 @@
 <p align="center"><img src="brand/cardright-logo.svg" width="360" alt="CardRight logo: a card whose stripe becomes a check mark"></p>
 
 <p align="center"><b>The card that pays you most is not always the one that leaves you the most.</b></p>
-<p align="center"><a href="https://murtuzabuilds.github.io/cardright/"><b>Live app</b></a> · <a href="https://murtuzabuilds.github.io/cardright/case-study.html"><b>Case study</b></a></p>
+<p align="center"><a href="https://murtuzabuilds.com/cardright/"><b>Live app</b></a> · <a href="https://murtuzabuilds.com/cardright/case-study.html"><b>Case study</b></a></p>
 
 ![CardRight recommending a card at checkout](docs/pay-jordan.webp)
 
