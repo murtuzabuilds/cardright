@@ -208,3 +208,5 @@ td a{font-size:12px}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .k select{max-width:62%;text-overflow:ellipsis}.rulesout .r{grid-template-columns:minmax(80px,120px) minmax(0,1fr)}.rulesout .r b{overflow-wrap:anywhere}
 .k select{min-width:0}
+
+.formula.ai-note{margin-top:10px}

@@ -137,7 +137,7 @@ export function evaluate(cardId, s, t, ctx = {}) {
   if (t.foreign && c.fx) part('fx', 'Foreign transaction fee', -A * c.fx, `${+(c.fx * 100).toFixed(1)}% of the purchase`);
   if (t.cat === 'taxes' && isCredit(c)) part('fee', 'Card processing fee', -Math.max(ASSUME.taxCreditMin, A * ASSUME.taxCreditFee), `${ASSUME.taxCreditFee * 100}% charged by the IRS-approved processor`);
   if (t.cat === 'taxes' && (c.type === 'debit')) part('fee', 'Card processing fee', -ASSUME.taxDebitFee, 'Flat debit card fee charged by the processor');
-  if (s.carry && s.apr) part('interest', 'Interest', -A * s.apr / 12 * s.carryMonths, `${(s.apr * 100).toFixed(2)}% APR. You carry a balance here, so interest starts the day you buy and runs about ${s.carryMonths} months`);
+  if (s.carry && s.apr) part('interest', 'Interest', -A * s.apr / 12 * s.carryMonths, `${(s.apr * 100).toFixed(2)}% APR. You carry a balance here. On most cards that ends the grace period, so interest starts the day you buy and runs about ${s.carryMonths} months`);
 
   out.net = +out.parts.reduce((a, p) => a + p.v, 0).toFixed(2);
   out.score = +(out.net + (out.signup?.edge || 0)).toFixed(2);

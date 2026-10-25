@@ -107,9 +107,22 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <p class="big">CardRight scores every way to pay on one number: what you actually keep.</p>
   <div class="formula">Money kept = <span class="g">rewards + statement credits + card offers + protections + tax saved</span> <span class="r">minus interest, foreign fees and processing fees</span><small>Every term is shown to the person, with its assumption. Estimates such as the value of an extended warranty are labelled as estimates. A sign-up bonus is all or nothing, so it is never spread across purchases: it only counts when the cards CardRight would pick anyway would miss it, and then it shows as its own one-time line.</small></div>
   <div class="story">
-    <div class="stat"><b class="neg" data-n="jActual">-$702</b><p>What Jordan's "5% card" really earned him last year. He carries a balance on his Discover at 26.49%, so every purchase started paying interest the day he made it. A rewards-first app would keep recommending it.</p></div>
+    <div class="stat"><b class="neg" data-n="jActual">-$702</b><p>What Jordan's "5% card" really earned him last year. He carries a balance on his Discover at 26.49%, which on most cards ends the grace period, so every purchase started paying interest the day he made it. A rewards-first app would keep recommending it.</p></div>
     <div class="stat"><b data-n="jBest">$327</b><p>What the same spending would have kept on the right cards: his no-fee 2% Active Cash for new spending, paid in full, while the balance gets paid down. That is <b data-n="jLeft">$1,029</b> left on the table.</p></div>
   </div>
+  <p class="big" style="margin-top:22px;font-size:17px">For someone who carries a balance, CardRight works in a fixed order: first stop adding to the balance that charges interest, then pay with the card that keeps the most, and only then look at rewards, credits and fees. A cheaper balance beats any reward.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Assumptions</div>
+  <h2>What I am assuming, <em>and how I would test it.</em></h2>
+  <p class="big">CardRight is a personal project and has not been tested with users. These are the bets it rests on, the first test for each, and the result that would change it.</p>
+  <table><thead><tr><th>Assumption</th><th>How I would test it</th><th>What would change my mind</th></tr></thead><tbody>
+    <tr><td><b>People with several cards mostly use one favorite.</b></td><td>Ten people with three or more cards go through last month's purchases with me, and we count how many went on a card that kept less.</td><td>Most already route their spending well. Then the value is in the yearly plan and fee checks, not the checkout answer.</td></tr>
+    <tr><td><b>People who carry a balance will act on "avoid interest" over "earn more points".</b></td><td>Show eight people who carry a balance both recommendations for the same purchase, and ask which they would follow at the register.</td><td>They pick points anyway. Then the interest warning needs a different form, such as a monthly total, not a per-purchase line.</td></tr>
+    <tr><td><b>Showing the math makes people trust the answer.</b></td><td>Two versions, with and without the breakdown. Ask how confident people are and whether they would follow it.</td><td>The math adds no trust, or slows people down. Then it moves one tap away and the answer stands alone.</td></tr>
+    <tr><td><b>The answer is needed at checkout, in seconds.</b></td><td>A timed task at a mock checkout, from opening the app to choosing a card.</td><td>People would rather plan before shopping. Then Plan and Replay lead, and Pay becomes secondary.</td></tr>
+  </tbody></table>
 </div></section>
 
 <section><div class="wrap">
@@ -137,7 +150,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
     <div><b>Replay</b><p>A year of spending rerun, losses split by cause.</p><code>replay.js</code></div>
     <div><b>Plan</b><p>Moves ranked by dollars, each with its math.</p><code>plan.js</code></div>
   </div>
-  <p class="big" style="margin-top:22px;font-size:16px">Recognizing merchants now runs on a real model (gpt-oss-120b on Groq), through the same small server and key as my Umbra product. The model only names a category from CardRight's fixed list; it never sees a card or a balance and never picks a card. If it is down, CardRight uses its own name rules and says so. Reading card terms is still a transparent rule-based stand-in, and a person would approve every new card's rules before they go live.</p>
+  <p class="big" style="margin-top:22px;font-size:16px">Recognizing merchants now runs on a real model (gpt-oss-120b on Groq), through the same small server and key as my Umbra product. The model only names a category from CardRight's fixed list; it never sees a card or a balance and never picks a card. If it is down, CardRight uses its own name rules and says so. I chose it because the job is narrow and a shopper is waiting: it answered in about a third of a second, and on 18 store names it had never been tuned on it got 17 right, against 10 for the name rules alone. Reading card terms is still a transparent rule-based stand-in, and a person would approve every new card's rules before they go live.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -171,6 +184,20 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <div class="rule"><div class="n">03</div><div><h3>Every number shows its math and its source</h3><p>Rewards, interest, fees, tax and estimates are separate lines. Every card carries the date it was checked and the pages it was checked against. What is assumed is listed as assumed.</p></div></div>
   <div class="rule"><div class="n">04</div><div><h3>AI assists, rules decide</h3><p>Reading terms and recognizing merchants can be wrong, so both report confidence and flag doubt. The recommendation is deterministic.</p></div></div>
   <div class="rule"><div class="n">05</div><div><h3>Guidance, not advice</h3><p>It explains trade-offs with the math shown, like which balance costs most. It does not tell anyone how to invest or which loan to take.</p></div></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Success metrics</div>
+  <h2>How I would know <em>it works.</em></h2>
+  <p class="big">Targets for a first pilot with 30 people who carry three or more cards. These are goals, not results.</p>
+  <table><thead><tr><th>Metric</th><th>Role</th><th>Target</th><th>Why this number</th></tr></thead><tbody>
+    <tr><td><b>Dollars kept per person per year, against their old habit</b></td><td>North star</td><td>$100 or more, median</td><td>Below that, it is not worth building a habit around.</td></tr>
+    <tr><td><b>Checkout answers followed</b></td><td>Adoption</td><td>7 in 10</td><td>An answer people ignore earns nothing.</td></tr>
+    <tr><td><b>First answer within two minutes of opening the app</b></td><td>Activation</td><td>8 in 10 new users</td><td>If setup takes longer than that, people leave before they see the value.</td></tr>
+    <tr><td><b>Used at checkout four or more times in month one</b></td><td>Retention</td><td>4 in 10</td><td>The test of whether it becomes a habit, not a one-time curiosity.</td></tr>
+    <tr><td><b>Recommending a card the store refuses, or one that costs interest</b></td><td>Guardrail</td><td>Zero</td><td>In money, trust breaks on the first wrong answer.</td></tr>
+  </tbody></table>
+  <p class="big" style="font-size:16px;margin-top:18px">If the yearly replay shows most people leave less than $50 on the table, the checkout answer is not worth a habit, and CardRight should lead with fee checks and the yearly plan.</p>
 </div></section>
 
 <section style="background:var(--cream2)"><div class="wrap">

@@ -33,7 +33,7 @@ export function plan(personId) {
   if (R.buckets.interest > 1) {
     const w = P.wallet.find(x => x.carry), c = CARDS[w.id];
     add({ k: 'stop', title: `Stop putting new spending on ${c.short} until it is paid off`, v: R.buckets.interest,
-      math: `You carry ${money(w.balance)} there at ${(w.apr * 100).toFixed(2)}%. Every new purchase starts paying interest the day you buy it, which cost ${money(R.buckets.interest)} last year. Its rewards earned back far less.` });
+      math: `You carry ${money(w.balance)} there at ${(w.apr * 100).toFixed(2)}%. Carrying a balance ends the grace period on most cards, so new purchases start paying interest the day you buy them. That cost ${money(R.buckets.interest)} last year. Its rewards earned back far less.` });
   }
 
   // 3. The carried balance itself
