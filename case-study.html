@@ -78,6 +78,7 @@ ul.plain{padding-left:20px;color:var(--t2)}ul.plain li{margin:8px 0}
 footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;border-top:1px solid var(--line)}
 @media (max-width:900px){.facts{grid-template-columns:1fr 1fr}.c2,.c3,.story,.brand{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.feature,.feature:nth-child(even){grid-template-columns:1fr;gap:20px}.feature:nth-child(even) .txt{order:0}.sw{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:600px){.facts{grid-template-columns:1fr}.wrap{padding:0 16px}nav.top{padding:12px 16px}nav.top a:not(.cta){display:none}section{padding:68px 0}.hero{padding-top:60px}.flow{grid-template-columns:1fr}table{font-size:13px}th,td{padding:10px 8px}.rule{grid-template-columns:1fr;gap:2px}.formula{padding:20px}}
+.glance td:last-child{white-space:nowrap;text-align:right}.glance td:last-child a{color:var(--forest3);text-decoration:none;font-weight:700;font-size:14px}.glance td:last-child a::after{content:" \2192"}
 </style>
 </head>
 <body>
@@ -92,13 +93,31 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <div class="shot"><img src="docs/pay-jordan.webp" alt="CardRight recommending a card at checkout with the full breakdown and a phone notification"></div>
 </div></header>
 
-<section><div class="wrap">
+<section id="problem"><div class="wrap">
   <div class="label">The problem</div>
   <h2>People carry several cards and guess <em>at every checkout.</em></h2>
   <p class="big">Each card has its own rules: bonus categories, spending caps, quarterly activations, annual fees, foreign fees, statement credits and protections that nobody remembers. So most people pick a favorite card and use it for everything.</p>
   <div class="facts" id="facts"></div>
   <p class="big">Apps already exist to help. CardPointers, MaxRewards and Kudos tell you which card earns the most points at a store. They are useful, and most are built around one question: <b>which card pays the most?</b></p>
   <div class="callout">That is the wrong question for the 47% of cardholders who carry a balance. The regulator has said so: <span id="cfpbQ"></span></div>
+  <table class="glance" style="margin-top:28px"><thead><tr><th>At a glance</th><th></th><th></th></tr></thead><tbody>
+    <tr><td><b>Problem and user</b></td><td>People with three or more cards, especially those who carry a balance, pick a card by habit and lose money to interest and fees.</td><td><a href="#problem">Problem</a></td></tr>
+    <tr><td><b>Alternatives</b></td><td>Points-first apps such as CardPointers, MaxRewards and Kudos, or one favorite card for everything.</td><td><a href="#diff">Alternatives</a></td></tr>
+    <tr><td><b>Decisions</b></td><td>Score every option on money kept, not points. The model only names a store's category; plain math picks the card.</td><td><a href="#decision">The decision</a></td></tr>
+    <tr><td><b>Evidence</b></td><td>17 of 18 unfamiliar stores categorized right against 10 for rules alone. A replayed year shows a "5% card" losing $702.</td><td><a href="#results">Results</a></td></tr>
+    <tr><td><b>Next step</b></td><td>Ten people with several cards go through last month's purchases, to test whether they really use one favorite. Not yet tested with users.</td><td><a href="#assumptions">Assumptions</a></td></tr>
+  </tbody></table>
+</div></section>
+
+<section id="decision"><div class="wrap">
+  <div class="label">The decision it improves</div>
+  <h2>Which card for this purchase, <em>counting interest and fees.</em></h2>
+  <p class="big">Jordan buys $55 of groceries. His Discover pays more in rewards on paper, but he carries a balance on it.</p>
+  <table><thead><tr><th>Card</th><th class="n">Rewards</th><th class="n">Interest</th><th class="n">Money kept</th></tr></thead><tbody>
+    <tr><td><b>Wells Fargo Active Cash</b>, paid in full</td><td class="n">$1.10</td><td class="n">$0.00</td><td class="n"><b>$1.10</b></td></tr>
+    <tr><td><b>Discover it Cash Back</b>, balance carried at 26.49%</td><td class="n">$0.55</td><td class="n">-$3.64</td><td class="n">-$3.09</td></tr>
+  </tbody></table>
+  <p class="big" style="font-size:16px;margin-top:18px">CardRight says: use the Active Cash. The answer depends on three stated assumptions, and each is shown with the math: carrying a balance ends the grace period on most cards, a purchase sits on a carried balance for about three months, and each person has one interest rate inside the card's published range.</p>
 </div></section>
 
 <section id="insight" style="background:var(--cream2)"><div class="wrap">
@@ -113,7 +132,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <p class="big" style="margin-top:22px;font-size:17px">For someone who carries a balance, CardRight works in a fixed order: first stop adding to the balance that charges interest, then pay with the card that keeps the most, and only then look at rewards, credits and fees. A cheaper balance beats any reward.</p>
 </div></section>
 
-<section><div class="wrap">
+<section id="assumptions"><div class="wrap">
   <div class="label">Assumptions</div>
   <h2>What I am assuming, <em>and how I would test it.</em></h2>
   <p class="big">CardRight is a personal project and has not been tested with users. These are the bets it rests on, the first test for each, and the result that would change it.</p>
@@ -125,7 +144,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   </tbody></table>
 </div></section>
 
-<section><div class="wrap">
+<section id="diff"><div class="wrap">
   <div class="label">Differentiation</div>
   <h2>Five things a rewards app <em>does not do.</em></h2>
   <div class="tw"><table><thead><tr><th>What it considers</th><th>Points-first apps (typical)</th><th>CardRight</th></tr></thead><tbody>
