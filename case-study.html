@@ -99,13 +99,15 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <p class="big">Each card has its own rules: bonus categories, spending caps, quarterly activations, annual fees, foreign fees, statement credits and protections that nobody remembers. So most people pick a favorite card and use it for everything.</p>
   <div class="facts" id="facts"></div>
   <p class="big">Apps already exist to help. CardPointers, MaxRewards and Kudos tell you which card earns the most points at a store. They are useful, and most are built around one question: <b>which card pays the most?</b></p>
+  <p class="big" style="font-size:18px"><b>What people need from it:</b> at the register, with several cards in hand, tell me which one leaves me with the most money, without me doing the math.</p>
   <div class="callout">That is the wrong question for the 47% of cardholders who carry a balance. The regulator has said so: <span id="cfpbQ"></span></div>
   <table class="glance" style="margin-top:28px"><thead><tr><th>At a glance</th><th></th><th></th></tr></thead><tbody>
     <tr><td><b>Problem and user</b></td><td>People with three or more cards, especially those who carry a balance, pick a card by habit and lose money to interest and fees.</td><td><a href="#problem">Problem</a></td></tr>
     <tr><td><b>Alternatives</b></td><td>Points-first apps such as CardPointers, MaxRewards and Kudos, or one favorite card for everything.</td><td><a href="#diff">Alternatives</a></td></tr>
     <tr><td><b>Decisions</b></td><td>Score every option on money kept, not points. The model only names a store's category; plain math picks the card.</td><td><a href="#decision">The decision</a></td></tr>
     <tr><td><b>Evidence</b></td><td>17 of 18 unfamiliar stores categorized right against 10 for rules alone. A replayed year shows a "5% card" losing $702.</td><td><a href="#results">Results</a></td></tr>
-    <tr><td><b>Next step</b></td><td>Ten people with several cards go through last month's purchases, to test whether they really use one favorite. Not yet tested with users.</td><td><a href="#assumptions">Assumptions</a></td></tr>
+    <tr><td><b>What is proven</b></td><td>Proven: the money-kept math and the store categories work on test data. Heard in five conversations: missed rewards are a small annoyance, while which balance to pay, whether a card is worth keeping and avoiding fees matter more. Still assumed: that people would pay, or get it through their bank.</td><td><a href="#assumptions">Assumptions</a></td></tr>
+    <tr><td><b>Next step</b></td><td>Bring the yearly value check and keep or cancel forward, and test them with people who carry three or more cards. No users yet.</td><td><a href="#assumptions">Assumptions</a></td></tr>
   </tbody></table>
 </div></section>
 
@@ -135,13 +137,23 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <section id="assumptions"><div class="wrap">
   <div class="label">Assumptions</div>
   <h2>What I am assuming, <em>and how I would test it.</em></h2>
-  <p class="big">CardRight is a personal project and has not been tested with users. These are the bets it rests on, the first test for each, and the result that would change it.</p>
+  <p class="big">CardRight is a personal project with no users yet. These are the bets it rests on, the first test for each, and the result that would change it.</p>
   <table><thead><tr><th>Assumption</th><th>How I would test it</th><th>What would change my mind</th></tr></thead><tbody>
     <tr><td><b>People with several cards mostly use one favorite.</b></td><td>Ten people with three or more cards go through last month's purchases with me, and we count how many went on a card that kept less.</td><td>Most already route their spending well. Then the value is in the yearly plan and fee checks, not the checkout answer.</td></tr>
     <tr><td><b>People who carry a balance will act on "avoid interest" over "earn more points".</b></td><td>Show eight people who carry a balance both recommendations for the same purchase, and ask which they would follow at the register.</td><td>They pick points anyway. Then the interest warning needs a different form, such as a monthly total, not a per-purchase line.</td></tr>
     <tr><td><b>Showing the math makes people trust the answer.</b></td><td>Two versions, with and without the breakdown. Ask how confident people are and whether they would follow it.</td><td>The math adds no trust, or slows people down. Then it moves one tap away and the answer stands alone.</td></tr>
     <tr><td><b>The answer is needed at checkout, in seconds.</b></td><td>A timed task at a mock checkout, from opening the app to choosing a card.</td><td>People would rather plan before shopping. Then Plan and Replay lead, and Pay becomes secondary.</td></tr>
   </tbody></table>
+  <h3 style="margin-top:48px">What I heard in five conversations</h3>
+  <p class="big" style="font-size:16px">Five people from my MBA and personal network: a young professional with several cards, an early-career cardholder carrying a balance, a recent graduate comparing cards, someone hit by an unexpected fee and a budget-app user. These are my summaries of the conversations, not quotes.</p>
+  <table><thead><tr><th>What I heard</th><th>What it changed</th></tr></thead><tbody>
+    <tr><td><b>Missed rewards are a small annoyance.</b> A person with a rewards spreadsheet still forgot quarterly limits, and mostly accepted the loss.</td><td>The checkout answer stays, but stops being the headline.</td></tr>
+    <tr><td><b>Deciding which balance to pay first is hard.</b> With a promotional rate ending and income that varies, statements and a basic calculator were not enough.</td><td>Payment planning goes on the backlog.</td></tr>
+    <tr><td><b>A sign-up bonus is hard to turn into personal value.</b> Whether normal spending would justify the fee after year one was a guess.</td><td>Supports the yearly value check.</td></tr>
+    <tr><td><b>Fees can cost more than missed rewards.</b> Autopay set on the wrong account led to a late fee.</td><td>Account setup checks become a candidate feature.</td></tr>
+    <tr><td><b>Keep or cancel is a real decision.</b> An organized user exported transactions to value each card and cancelled one. Travel credits and points were the hardest to value.</td><td>Keep or cancel comes forward, with estimates labelled.</td></tr>
+  </tbody></table>
+  <p class="big" style="font-size:16px;margin-top:18px">Still unknown: whether one product can handle card choice and payoff well enough to beat issuer apps and spreadsheets, and how well these five match the people CardRight is built for. Only one of them carried a balance. The next round adds two questions on money: what they pay today for card apps or advice, if anything, and what they lost last year to interest and fees.</p>
 </div></section>
 
 <section id="diff"><div class="wrap">
@@ -208,7 +220,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <section><div class="wrap">
   <div class="label">Success metrics</div>
   <h2>How I would know <em>it works.</em></h2>
-  <p class="big">Targets for a first pilot with 30 people who carry three or more cards. These are goals, not results.</p>
+  <p class="big">Targets for a first pilot with 30 people who carry three or more cards. These are goals, not results. <b>The pilot's one goal:</b> people keep more money at checkout without having to think about it. The measures below show whether it happened.</p>
   <table><thead><tr><th>Metric</th><th>Role</th><th>Target</th><th>Why this number</th></tr></thead><tbody>
     <tr><td><b>Dollars kept per person per year, against their old habit</b></td><td>North star</td><td>$100 or more, median</td><td>Below that, it is not worth building a habit around.</td></tr>
     <tr><td><b>Checkout answers followed</b></td><td>Adoption</td><td>7 in 10</td><td>An answer people ignore earns nothing.</td></tr>
@@ -245,8 +257,10 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
     <li>Move the fine print reader onto the model too, constrained to the same output shape, and rerun its held-out set.</li>
     <li>A card-terms pipeline with a review date on every rule. Two of the cards here changed in the four months before I built this, so stale terms are the main product risk.</li>
     <li>Statement-date planning: which card to use this week to keep each card under 30% of its limit when it reports.</li>
+    <li>Payment planning: which balance to pay first when a promotional rate is ending and income varies.</li>
     <li>Interviews with people who carry balances, to test whether "stop using this card" lands as help or as judgment.</li>
   </ul>
+  <p class="big" style="font-size:17px;margin-top:22px"><b>The cheaper test I would run first.</b> I built CardRight before testing it with users. The smaller first test would have been a spreadsheet: ten people's last month of purchases, worked through by hand to see what the right card would have kept. If most leave less than $50 a year on the table, the app is not worth building. It is still the first thing I would run now.</p>
 </div></section>
 
 <footer>CardRight is a concept product designed and built by Murtuza. It is an independent project, not affiliated with, sponsored by or endorsed by any bank, card issuer or merchant named. Card and merchant names are trademarks of their owners. Card terms are as publicly listed on 1 October 2026 and change often. The three people and their spending are fictional. Not financial advice.<br><a href="./">Live app</a> · <a href="./?v=sources">Sources</a> · <a href="https://github.com/murtuzabuilds/cardright">Code</a></footer>
