@@ -5,7 +5,7 @@
 
 ![CardRight recommending a card at checkout](docs/pay-jordan.webp)
 
-CardRight is a concept product I designed and built. It tells you which card to use for every purchase by counting what your cards cost you, not just what they pay you. It runs on real cards and real store rules, replays a year of spending, shows where money leaked, and ranks the moves worth making.
+CardRight is a concept product I designed and built. It replays a year of spending through your real cards, shows where money leaked to interest and fees, and ranks the moves worth making, including which card earns its annual fee. At checkout it names the card that leaves you the most, not the one that pays the most points. It runs on 15 real cards as a test set.
 
 ## Why I built it
 

@@ -87,7 +87,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <header class="hero"><canvas id="cards" aria-hidden="true"></canvas><div class="wrap">
   <div class="eyebrow">Case study · Concept product · Fintech</div>
   <h1>The card that pays you most is not always the one that <em>leaves you the most.</em></h1>
-  <p class="lede">CardRight tells you which card to use for every purchase by counting what your cards cost you, not just what they pay you. It runs on real cards and real store rules, replays your last year, shows where money leaked, and ranks the moves worth making.</p>
+  <p class="lede">CardRight replays your last year of spending through your real cards, shows where money leaked to interest and fees, and ranks the moves worth making: which balance to stop adding to, which card earns its annual fee and which to cancel. At the register, it names the card that leaves you the most, not the one that pays the most points.</p>
   <div class="btns"><a class="btn p" href="./">Try the live app</a><a class="btn" href="https://github.com/murtuzabuilds/cardright">Read the code</a></div>
   <div class="meta"><div><b>Role</b>Product manager and designer</div><div><b>Scope</b>Strategy, engine, interface, brand</div><div><b>Built with</b>JavaScript, no dependencies</div></div>
   <div class="shot"><img src="docs/pay-jordan.webp" alt="CardRight recommending a card at checkout with the full breakdown and a phone notification"></div>
@@ -159,6 +159,14 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <section id="diff"><div class="wrap">
   <div class="label">Differentiation</div>
   <h2>Five things a rewards app <em>does not do.</em></h2>
+  <h3 style="margin-top:8px">The leaders today</h3>
+  <div class="tw"><table><thead><tr><th>App</th><th>Recommends on</th><th class="n">Cards covered</th><th>Price</th><th>Counts interest?</th></tr></thead><tbody>
+    <tr><td><b><a href="https://www.joinkudos.com/blog/cardpointers-credit-card-app-review">CardPointers</a></b></td><td>Best card by store or category; auto-adds card-linked offers</td><td class="n">5,000+</td><td>Free tier; paid about $72 a year</td><td>Not mentioned</td></tr>
+    <tr><td><b><a href="https://help.maxrewards.com/en/articles/12747576-what-are-the-maxrewards-subscription-tiers">MaxRewards</a></b></td><td>Best card by category and location; offers and benefit tracking</td><td class="n">Not stated</td><td>Free; Gold $108 a year</td><td>Not mentioned</td></tr>
+    <tr><td><b><a href="https://www.finextra.com/newsarticle/44168/kudos-raises-102m-for-ai-powered-smart-wallet/ai">Kudos</a></b></td><td>Best card at online checkout; suggests new cards</td><td class="n">About 3,000</td><td>Free; Premium optional</td><td>Not mentioned</td></tr>
+    <tr><td><b>CardRight</b></td><td>Money kept: rewards minus interest and fees</td><td class="n">15 (test set)</td><td>Hypothesis: about $5 a month</td><td>Yes, with the grace period</td></tr>
+  </tbody></table></div>
+  <p class="big" style="font-size:16px;margin:14px 0 30px">The leaders cover thousands of cards, so coverage is a solved data problem that can be licensed. None of them describes counting interest in its recommendations, which is the bigger number for the 47% who carry a balance. Kudos raised a $10.2M Series A with 200,000+ users, so the category has paying demand.</p>
   <div class="tw"><table><thead><tr><th>What it considers</th><th>Points-first apps (typical)</th><th>CardRight</th></tr></thead><tbody>
     <tr><td>Best rewards card at a store</td><td><span class="y">Yes</span></td><td><span class="y">Yes</span></td></tr>
     <tr><td>Interest when you carry a balance</td><td><span class="x">Rarely central</span></td><td><span class="y">Core of the math</span></td></tr>
@@ -187,6 +195,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
 <section><div class="wrap">
   <div class="label">Real scenarios</div>
   <h2>Real cards at real stores, <em>with the rules that trip people up.</em></h2>
+  <p class="big" style="font-size:16px">15 real cards, with terms checked against issuer pages, serve as a test set. The leaders already track 3,000 to 5,000+ cards, so the bet here is the scoring, not the catalog.</p>
   <div class="feature"><div class="txt"><span class="tag">Maya · Costco run</span><h3>Three of her four cards are refused</h3><p>Costco warehouses take only Visa credit cards. Her American Express Gold, Freedom Flex and Double Cash are all out, and the app says why before she reaches the register. Her Sapphire Preferred is a Visa, so it wins. It is also <b data-n="mLeft">$380</b> from a 75,000 point sign-up bonus, but she is on track to reach that with her usual spending, so CardRight does not pretend this one purchase is worth more than its rewards.</p></div><div class="shot"><img src="docs/pay.webp" alt="CardRight at Costco: three cards refused because Costco only takes Visa" loading="lazy"></div></div>
   <div class="feature"><div class="txt"><span class="tag">Jordan · Groceries</span><h3>It steers him away from his favorite card</h3><p>He carries $3,400 on his Discover at 26.49%, so a $55 grocery run on it costs more in interest than any reward pays. CardRight says use the 2% Active Cash and pay it in full, in one sentence.</p></div><div class="shot"><img src="docs/pay-jordan.webp" alt="CardRight showing the balance-carrying card losing money on groceries" loading="lazy"></div></div>
   <div class="feature"><div class="txt"><span class="tag">Jordan · Replay</span><h3>A year of spending, rerun</h3><p><b data-n="jN">398</b> purchases replayed. Most of what he lost was interest, not rewards. The line shows his "kept" going below zero while the right cards stay positive.</p></div><div class="shot"><img src="docs/replay.webp" alt="Replay showing money left on the table, mostly interest" loading="lazy"></div></div>
@@ -235,7 +244,7 @@ footer{padding:50px 0 70px;text-align:center;color:var(--t3);font-size:13px;bord
   <div class="label">If this were a real product</div>
   <h2>How it makes money <em>without selling cards.</em></h2>
   <div class="cols c2">
-    <div class="card"><h3>Options I would test</h3><p>A small subscription, priced against what the replay shows a person leaves on the table. Or licensed to banks and credit unions as a feature inside their own app, where helping customers use the bank's cards well improves retention.</p></div>
+    <div class="card"><h3>Options I would test</h3><p>A subscription at about $5 a month ($60 a year), below CardPointers (about $72 a year) and MaxRewards Gold ($108 a year), and under a fifth of the $327 Jordan's spending could have kept. Or licensed to banks and credit unions as a feature inside their own app, where helping customers use the bank's cards well improves retention.</p></div>
     <div class="card"><h3>What I would measure</h3><p>Dollars kept per user against their own replay baseline. Share of checkouts where the recommended card was used. Interest avoided for people who carry balances. How often the plan's top move gets done within 30 days.</p></div>
     <div class="card"><h3>Who it is for first</h3><p>People with three or more cards, and especially people who carry a balance. They have the most to gain and are the least served by points-first tools.</p></div>
     <div class="card"><h3>What would stop a launch</h3><p>Any recommendation that sends new spending to a card with a carried balance. Any stale card term older than its review window. Any sign that a paid relationship influenced a result.</p></div>
